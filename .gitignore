@@ -5,6 +5,7 @@
 # Files
 *.swp
 *.swo
+.DS_Store
 
 # Dirs
 ven*/
