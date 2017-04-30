@@ -2,5 +2,9 @@
 *.jpg
 *.png
 
+# Files
+*.swp
+*.swo
+
 # Dirs
 ven*/
