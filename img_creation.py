@@ -5,7 +5,7 @@ from collections import deque
 from string import ascii_lowercase as chars_lower
 
 # Want to randomize location of char
-# Want to randomize orientation of char (between 0-45 degress)
+# Want to randomize orientation of char (between 0-30 degress)
 # Want to randomize image resolutions between (Note4 - S8)
 # Want to randomize density of chars (Thin, Bold, Medium)
 # Want to randomize italics, and none italics
