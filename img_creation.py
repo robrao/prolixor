@@ -12,6 +12,7 @@ from string import ascii_lowercase as chars_lower
 # Want to randomize top 20 publishing Fonts
 # Want to randomize top 5 publishing font sizes
 # Want to randmoize obsfucation/noise between some reasonable range
+# Want to mimic lighting conditions (range between white and red)
 
 # Output 26 chars
 # --> No word contains numbers
