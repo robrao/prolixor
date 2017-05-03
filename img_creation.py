@@ -7,6 +7,7 @@ from string import ascii_lowercase as chars_lower
 # Want to randomize location of char
 # Want to randomize orientation of char (between 0-30 degress)
 # Want to randomize image resolutions between (Note4 - S8)
+# Want to randomize aspect ratios of image (same as above)
 # Want to randomize density of chars (Thin, Bold, Medium)
 # Want to randomize italics, and none italics
 # Want to randomize top 20 publishing Fonts
@@ -16,9 +17,7 @@ from string import ascii_lowercase as chars_lower
 
 # Output 26 chars
 # --> No word contains numbers
-
 # Always white background
-
 # Can download TTF files from https://fonts.google.com
 
 ## Randomize number of chars in image
@@ -45,4 +44,4 @@ draw = ImageDraw.Draw(img, "RGBA")
 # draw.text((x,y), "text to display", font=ImageFont.truetype(path, fontsize, encoding))
 draw.text((20, 70), words, font=ImageFont.truetype("/Users/robbyrao/Downloads/Roboto/Roboto-Black.ttf", size=15))
 
-img.save("imgname.jpg", "JPEG")
+img.save("imgname.jpg", "JPEG", dpi=(600, 600))
