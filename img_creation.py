@@ -19,8 +19,10 @@ Make the split a function of the length of pixels?
 # Want to randomize top 20 publishing Fonts
 # Want to randomize top 5 publishing font sizes
 # Want to randmoize obsfucation/noise between some reasonable range
-# Want to mimic lighting conditions (range between white and red)
-# Want different degrees of black font, different saturations
+
+# Best way to achieve lighting condtions?
+## Want to mimic lighting conditions (range between white and red, saturation)?
+## Want different degrees of background white (mimic lighting)?
 
 # Want bash script to download all the necessary fonts
 
@@ -37,7 +39,12 @@ chars = deque(maxlen=rnd_size)
 ## Randomize shade of black
 ## 90 arbitrary number
 rnd_shade = randint(0, 90)
-rnd_black = (rnd_shade, rnd_shade, rnd_shade, rnd_shade)
+rnd_red = rnd_shade + randint(0, 2)
+rnd_blue = rnd_shade + randint(0, 2)
+rnd_green = rnd_shade + randint(0, 2)
+rnd_alpha = rnd_shade + randint(0, 2)
+
+rnd_black = (rnd_red, rnd_blue, rnd_green, rnd_alpha)
 
 ## Randomize chars
 for i in range(0, rnd_size):
@@ -54,6 +61,8 @@ for i in [0]:
     font = ImageFont.truetype("/Users/robbyrao/Downloads/Roboto/Roboto-Black.ttf", size=15)
 
 # font size need to change in relation to image size
+# word should be randomly moved x+0.5, y+0.5 from the center
+# of the image
 
 img = Image.new('RGBA', (200, 100), 'white')
 draw = ImageDraw.Draw(img, "RGBA")
