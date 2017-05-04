@@ -4,9 +4,16 @@ from PIL import Image, ImageDraw, ImageFont
 from collections import deque
 from string import ascii_lowercase as chars_lower
 
+'''
+Need to consider changing of how YOLO splits the image
+into 7x7 sections. Since we know initially we will
+only want a single word highlighted by the user. This
+should remove the need for a vertical split. 1x9?
+Make the split a function of the length of pixels?
+'''
+
 # Want to randomize orientation of char (between 0-30 degress)
 # Want to randomize image resolutions between (Note4 - S8)
-# Want to randomize aspect ratios of image (same as above)
 # Want to randomize density of chars (Thin, Bold, Medium)
 # Want to randomize italics, and none italics
 # Want to randomize top 20 publishing Fonts
