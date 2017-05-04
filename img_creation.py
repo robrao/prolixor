@@ -4,7 +4,6 @@ from PIL import Image, ImageDraw, ImageFont
 from collections import deque
 from string import ascii_lowercase as chars_lower
 
-# Want to randomize location of char
 # Want to randomize orientation of char (between 0-30 degress)
 # Want to randomize image resolutions between (Note4 - S8)
 # Want to randomize aspect ratios of image (same as above)
@@ -14,6 +13,9 @@ from string import ascii_lowercase as chars_lower
 # Want to randomize top 5 publishing font sizes
 # Want to randmoize obsfucation/noise between some reasonable range
 # Want to mimic lighting conditions (range between white and red)
+# Want different degrees of black font, different saturations
+
+# Want bash script to download all the necessary fonts
 
 # Output 26 chars
 # --> No word contains numbers
@@ -21,27 +23,33 @@ from string import ascii_lowercase as chars_lower
 # Can download TTF files from https://fonts.google.com
 
 ## Randomize number of chars in image
-rand_size = randint(0, 9)
-chars = deque(maxlen=rand_size)
+## Supercalifragilisticexpialidocious
+rnd_size = randint(1, 34)
+chars = deque(maxlen=rnd_size)
 
-"""
-Traceback (most recent call last):
-      File "img_creation.py", line 31, in <module>
-          c = chars_lower[rnd]
-          IndexError: string index out of range
-"""
+## Randomize shade of black
+## 90 arbitrary number
+rnd_shade = randint(0, 90)
+rnd_black = (rnd_shade, rnd_shade, rnd_shade, rnd_shade)
 
 ## Randomize chars
-for i in range(0, rand_size):
-    rnd = randint(0, 26)
+for i in range(0, rnd_size):
+    rnd = randint(0, 25)
     c = chars_lower[rnd]
     chars.append(c)
 
-words = "".join(chars)
+# Initially user will highlight single word
+# so only need single word per image
+word = "".join(chars)
 
-img = Image.new('RGB', (200, 100))
+#for font in fonts:
+for i in [0]:
+    font = ImageFont.truetype("/Users/robbyrao/Downloads/Roboto/Roboto-Black.ttf", size=15)
+
+# font size need to change in relation to image size
+
+img = Image.new('RGBA', (200, 100), 'white')
 draw = ImageDraw.Draw(img, "RGBA")
-# draw.text((x,y), "text to display", font=ImageFont.truetype(path, fontsize, encoding))
-draw.text((20, 70), words, font=ImageFont.truetype("/Users/robbyrao/Downloads/Roboto/Roboto-Black.ttf", size=15))
+draw.text((20, 70), word, rnd_black, font=font)
 
 img.save("imgname.jpg", "JPEG", dpi=(600, 600))
