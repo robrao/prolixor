@@ -10,6 +10,8 @@ into 7x7 sections. Since we know initially we will
 only want a single word highlighted by the user. This
 should remove the need for a vertical split. 1x9?
 Make the split a function of the length of pixels?
+
+How to make a unreplicatable Test Set?
 '''
 
 # Want to randomize orientation of char (between 0-30 degress)
