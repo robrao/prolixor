@@ -12,6 +12,9 @@ should remove the need for a vertical split. 1x9?
 Make the split a function of the length of pixels?
 
 How to make a unreplicatable Test Set?
+-> set different rand seed for Test and Train?
+
+Recalculate anchor boxes using ground truth.
 '''
 
 # Want to randomize orientation of char (between 0-30 degress)
@@ -21,6 +24,7 @@ How to make a unreplicatable Test Set?
 # Want to randomize top 20 publishing Fonts
 # Want to randomize top 5 publishing font sizes
 # Want to randmoize obsfucation/noise between some reasonable range
+# Want to output label (char) and x, y, w, h of bbx (x, y, being center of bbx?)
 
 # Best way to achieve lighting condtions?
 ## Want to mimic lighting conditions (range between white and red, saturation)?
