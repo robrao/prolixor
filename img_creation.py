@@ -14,6 +14,26 @@ Make the split a function of the length of pixels?
 How to make a unreplicatable Test Set?
 -> set different rand seed for Test and Train?
 
+Image must have max height and width. With in
+which we can move the text, which can be a varying
+size.
+-> we can determine max height and width by using
+google translates box as an example.
+x-> This can cause issues because there may be an
+letter from another word that still remains in
+the image
+x-> how would you know once the word has been
+correctly selected?
+|
+--> allow user to highlight word.
+--> will need a max height
+--> assuming largest font used in print is 20points
+--> set max height for highlight box from that max font size
+--> max width of image can be set from max phone screen width
+x--> hightlighting box can also have additional chars being selected
+---> solve later...possibly lstms, or simple clustering of chars based
+on centeriod.
+
 Recalculate anchor boxes using ground truth.
 '''
 
