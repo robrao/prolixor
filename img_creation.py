@@ -34,6 +34,14 @@ x--> hightlighting box can also have additional chars being selected
 ---> solve later...possibly lstms, or simple clustering of chars based
 on centeriod.
 
+*-> the image size trained on should be a function of:
+    * font size
+    * number of characters
+Image size does not matter because the data distribution we are trying
+to imitate is the characters not the image. The changing of the image
+size based off the font size will add sufficient randomization for images
+anyway.
+
 Recalculate anchor boxes using ground truth.
 '''
 
@@ -45,6 +53,7 @@ Recalculate anchor boxes using ground truth.
 # Want to randomize top 5 publishing font sizes
 # Want to randmoize obsfucation/noise between some reasonable range
 # Want to output label (char) and x, y, w, h of bbx (x, y, being center of bbx?)
+# Want to randomly add random degree of blur to image
 
 # Best way to achieve lighting condtions?
 ## Want to mimic lighting conditions (range between white and red, saturation)?
@@ -82,16 +91,19 @@ for i in range(0, rnd_size):
 # so only need single word per image
 word = "".join(chars)
 
-#for font in fonts:
+font_size = randint(10, 150)
 for i in [0]:
-    font = ImageFont.truetype("/Users/robbyrao/Downloads/Roboto/Roboto-Black.ttf", size=15)
+    font = ImageFont.truetype("/Users/robbyrao/Downloads/Roboto/Roboto-Black.ttf", size=font_size)
 
 # font size need to change in relation to image size
 # word should be randomly moved x+0.5, y+0.5 from the center
 # of the image
 
-img = Image.new('RGBA', (200, 100), 'white')
+img = Image.new('RGBA', (200, 100), 'white') #randomize background
 draw = ImageDraw.Draw(img, "RGBA")
 draw.text((20, 70), word, rnd_black, font=font)
+
+print draw.textsize("test")
+print font_size
 
 img.save("imgname.jpg", "JPEG", dpi=(600, 600))
