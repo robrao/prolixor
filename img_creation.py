@@ -98,8 +98,8 @@ for i in [0]:
 # font size need to change in relation to image size
 # word should be randomly moved x+0.5, y+0.5 from the center
 # of the image
-im_w = int(font_size * rnd_size * 0.62)
-im_h = int(font_size + 10)
+im_w = int(font_size * rnd_size * 0.61) # c/im_w = 0.6052
+im_h = int(font_size + 10) # c/im_w = 0.7105
 
 print "font size: {}".format(font_size)
 print "# of chars: {}".format(rnd_size)
