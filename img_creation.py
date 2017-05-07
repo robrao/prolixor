@@ -14,33 +14,10 @@ Make the split a function of the length of pixels?
 How to make a unreplicatable Test Set?
 -> set different rand seed for Test and Train?
 
-Image must have max height and width. With in
-which we can move the text, which can be a varying
-size.
--> we can determine max height and width by using
-google translates box as an example.
-x-> This can cause issues because there may be an
-letter from another word that still remains in
-the image
-x-> how would you know once the word has been
-correctly selected?
-|
---> allow user to highlight word.
---> will need a max height
---> assuming largest font used in print is 20points
---> set max height for highlight box from that max font size
---> max width of image can be set from max phone screen width
-x--> hightlighting box can also have additional chars being selected
----> solve later...possibly lstms, or simple clustering of chars based
-on centeriod.
+LSTM to find all need chars?
+-> Clustering will handle that for now
 
-*-> the image size trained on should be a function of:
-    * font size
-    * number of characters
-Image size does not matter because the data distribution we are trying
-to imitate is the characters not the image. The changing of the image
-size based off the font size will add sufficient randomization for images
-anyway.
+Allow user to highlight word
 
 Recalculate anchor boxes using ground truth.
 '''
@@ -98,10 +75,8 @@ for i in [0]:
 # font size need to change in relation to image size
 # word should be randomly moved x+0.5, y+0.5 from the center
 # of the image
-#im_w = int(font_size * rnd_size * 0.61) # c/im_w = 0.6052
-#im_h = int(font_size + 10) # c/im_w = 0.7105
-im_w = int(font_size * rnd_size) # c/im_w = 0.6052
-im_h = int(font_size) # c/im_w = 0.7105
+im_w = int(font_size * rnd_size * 0.61) # c/im_w = 0.6052
+im_h = int(font_size + 10) # c/im_w = 0.7105
 
 print "font size: {}".format(font_size)
 print "# of chars: {}".format(rnd_size)
@@ -112,9 +87,9 @@ img = Image.new('RGBA', (im_w, im_h), 'white') #randomize background
 draw = ImageDraw.Draw(img, "RGBA")
 draw.line((img.size[0]/2.0, 0) + (img.size[0]/2.0, img.size[1]), fill=128)
 draw.line((0, img.size[1]/2.0, img.size[0], img.size[1]/2.0), fill=128)
-dw, dh = draw.textsize(word)
-cent_w = (im_w/2.0) - dw # rounding issues?
-cent_h = (im_h/2.0) - dh # rounding issues?
+dw, dh = draw.textsize(word, font)
+cent_w = (im_w - dw) / 2.0 # rounding issues?
+cent_h = (im_h - dh) / 2.0 # rounding issues?
 
 print "word wxh: {} {}".format(dw, dh)
 print "cent wxh: {} {}".format(cent_w, cent_h)
