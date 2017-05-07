@@ -98,8 +98,10 @@ for i in [0]:
 # font size need to change in relation to image size
 # word should be randomly moved x+0.5, y+0.5 from the center
 # of the image
-im_w = int(font_size * rnd_size * 0.61) # c/im_w = 0.6052
-im_h = int(font_size + 10) # c/im_w = 0.7105
+#im_w = int(font_size * rnd_size * 0.61) # c/im_w = 0.6052
+#im_h = int(font_size + 10) # c/im_w = 0.7105
+im_w = int(font_size * rnd_size) # c/im_w = 0.6052
+im_h = int(font_size) # c/im_w = 0.7105
 
 print "font size: {}".format(font_size)
 print "# of chars: {}".format(rnd_size)
@@ -108,9 +110,11 @@ print "word: {}".format(word)
 
 img = Image.new('RGBA', (im_w, im_h), 'white') #randomize background
 draw = ImageDraw.Draw(img, "RGBA")
+draw.line((img.size[0]/2.0, 0) + (img.size[0]/2.0, img.size[1]), fill=128)
+draw.line((0, img.size[1]/2.0, img.size[0], img.size[1]/2.0), fill=128)
 dw, dh = draw.textsize(word)
-cent_w = (im_w - dw)/4 # rounding issues?
-cent_h = (im_h - dh)/4 # rounding issues?
+cent_w = (im_w/2.0) - dw # rounding issues?
+cent_h = (im_h/2.0) - dh # rounding issues?
 
 print "word wxh: {} {}".format(dw, dh)
 print "cent wxh: {} {}".format(cent_w, cent_h)
