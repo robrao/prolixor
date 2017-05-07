@@ -103,11 +103,18 @@ im_h = int(font_size + 10) # c/im_w = 0.7105
 
 print "font size: {}".format(font_size)
 print "# of chars: {}".format(rnd_size)
-print "im wxh: {}".format(im_w, im_h)
+print "im wxh: {} {}".format(im_w, im_h)
 print "word: {}".format(word)
 
 img = Image.new('RGBA', (im_w, im_h), 'white') #randomize background
 draw = ImageDraw.Draw(img, "RGBA")
-draw.text((1, 1), word, rnd_black, font=font)
+dw, dh = draw.textsize(word)
+cent_w = (im_w - dw)/4 # rounding issues?
+cent_h = (im_h - dh)/4 # rounding issues?
+
+print "word wxh: {} {}".format(dw, dh)
+print "cent wxh: {} {}".format(cent_w, cent_h)
+
+draw.text((cent_w, cent_h), word, rnd_black, font=font)
 
 img.save("imgname.jpg", "JPEG", dpi=(600, 600))
