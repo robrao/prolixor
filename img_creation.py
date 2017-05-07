@@ -98,12 +98,15 @@ for i in [0]:
 # font size need to change in relation to image size
 # word should be randomly moved x+0.5, y+0.5 from the center
 # of the image
+im_w = int(font_size * rnd_size * 0.62)
+im_h = int(font_size + 10)
 
-img = Image.new('RGBA', (200, 100), 'white') #randomize background
+print "font size: {}".format(font_size)
+print "# of chars: {}".format(rnd_size)
+print "im wxh: {}".format(im_w, im_h)
+
+img = Image.new('RGBA', (im_w, im_h), 'white') #randomize background
 draw = ImageDraw.Draw(img, "RGBA")
-draw.text((20, 70), word, rnd_black, font=font)
-
-print draw.textsize("test")
-print font_size
+draw.text((1, 1), word, rnd_black, font=font)
 
 img.save("imgname.jpg", "JPEG", dpi=(600, 600))
