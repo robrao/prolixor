@@ -104,6 +104,7 @@ im_h = int(font_size + 10)
 print "font size: {}".format(font_size)
 print "# of chars: {}".format(rnd_size)
 print "im wxh: {}".format(im_w, im_h)
+print "word: {}".format(word)
 
 img = Image.new('RGBA', (im_w, im_h), 'white') #randomize background
 draw = ImageDraw.Draw(img, "RGBA")
