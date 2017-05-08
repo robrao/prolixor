@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from random import randint
+from random import randint, choice
 from PIL import Image, ImageDraw, ImageFont
 from collections import deque
 from string import ascii_lowercase as chars_lower
@@ -76,24 +76,21 @@ for i in [0]:
 # word should be randomly moved x+0.5, y+0.5 from the center
 # of the image
 im_w = int(font_size * rnd_size * 0.61) # c/im_w = 0.6052
-im_h = int(font_size + 10) # c/im_w = 0.7105
-
-print "font size: {}".format(font_size)
-print "# of chars: {}".format(rnd_size)
-print "im wxh: {} {}".format(im_w, im_h)
-print "word: {}".format(word)
+im_h = int(font_size + im_w * 0.5) # c/im_w = 0.7105
 
 img = Image.new('RGBA', (im_w, im_h), 'white') #randomize background
 draw = ImageDraw.Draw(img, "RGBA")
 draw.line((img.size[0]/2.0, 0) + (img.size[0]/2.0, img.size[1]), fill=128)
 draw.line((0, img.size[1]/2.0, img.size[0], img.size[1]/2.0), fill=128)
 dw, dh = draw.textsize(word, font)
-cent_w = (im_w - dw) / 2.0 # rounding issues?
-cent_h = (im_h - dh) / 2.0 # rounding issues?
 
-print "word wxh: {} {}".format(dw, dh)
-print "cent wxh: {} {}".format(cent_w, cent_h)
+cent_w = (im_w - dw) / 2.0
+cent_h = (im_h - dh) / 2.0
+x_jitter = randint(0, int((im_w - dw) * 0.25)) * choice([-1, 1])
+y_jitter = randint(0, int((im_h - dh) * 0.25)) * choice([-1, 1])
+txtx = cent_w + x_jitter
+txty = cent_h + y_jitter
 
-draw.text((cent_w, cent_h), word, rnd_black, font=font)
+draw.text((txtx, txty), word, rnd_black, font=font)
 
 img.save("imgname.jpg", "JPEG", dpi=(600, 600))
