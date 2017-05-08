@@ -76,7 +76,7 @@ for i in [0]:
 # word should be randomly moved x+0.5, y+0.5 from the center
 # of the image
 im_w = int(font_size * rnd_size * 0.61) # c/im_w = 0.6052
-im_h = int(font_size + im_w * 0.5) # c/im_w = 0.7105
+im_h = int(font_size + im_w * 0.1) # c/im_w = 0.7105
 
 img = Image.new('RGBA', (im_w, im_h), 'white') #randomize background
 draw = ImageDraw.Draw(img, "RGBA")
