@@ -45,6 +45,8 @@ Recalculate anchor boxes using ground truth.
 
 ## Randomize number of chars in image
 ## Supercalifragilisticexpialidocious
+font_size = randint(10, 150)
+max_chars = int(34 * (1/(font_size/10)))
 rnd_size = randint(1, 34)
 chars = deque(maxlen=rnd_size)
 
@@ -68,7 +70,6 @@ for i in range(0, rnd_size):
 # so only need single word per image
 word = "".join(chars)
 
-font_size = randint(10, 150)
 for i in [0]:
     font = ImageFont.truetype("/Users/robbyrao/Downloads/Roboto/Roboto-Black.ttf", size=font_size)
 
@@ -80,8 +81,6 @@ im_h = int(font_size + im_w * 0.1) # c/im_w = 0.7105
 
 img = Image.new('RGBA', (im_w, im_h), 'white') #randomize background
 draw = ImageDraw.Draw(img, "RGBA")
-draw.line((img.size[0]/2.0, 0) + (img.size[0]/2.0, img.size[1]), fill=128)
-draw.line((0, img.size[1]/2.0, img.size[0], img.size[1]/2.0), fill=128)
 dw, dh = draw.textsize(word, font)
 
 cent_w = (im_w - dw) / 2.0
