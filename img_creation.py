@@ -83,6 +83,12 @@ img = Image.new('RGBA', (im_w, im_h), 'white') #randomize background
 draw = ImageDraw.Draw(img, "RGBA")
 dw, dh = draw.textsize(word, font)
 
+# per char size
+char_size = []
+for c in chars:
+    csize = draw.textsize(c, font)
+    char_size.append(csize)
+
 cent_w = (im_w - dw) / 2.0
 cent_h = (im_h - dh) / 2.0
 x_jitter = randint(0, int((im_w - dw) * 0.25)) * choice([-1, 1])
@@ -91,5 +97,16 @@ txtx = cent_w + x_jitter
 txty = cent_h + y_jitter
 
 draw.text((txtx, txty), word, rnd_black, font=font)
+
+offset = [txtx, txty]
+for bbx in char_size:
+    x1 = offset[0]
+    y1 = offset[1]
+    x2 = offset[0] + bbx[0]
+    y2 = offset[1] + bbx[1]
+    
+    draw.rectangle([x1, y1, x2, y2], outline='red')
+
+    offset[0] = x2
 
 img.save("imgname.jpg", "JPEG", dpi=(600, 600))
