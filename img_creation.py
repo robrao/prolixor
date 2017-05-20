@@ -1,8 +1,10 @@
 #!/usr/bin/python
 from random import randint, choice
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from collections import deque
 from string import ascii_lowercase as chars_lower
+from skimage.util import random_noise
+from random import uniform as rnd_uniform
 
 '''
 Need to consider changing of how YOLO splits the image
@@ -29,8 +31,8 @@ Recalculate anchor boxes using ground truth.
 # Want to randomize top 20 publishing Fonts
 # Want to randomize top 5 publishing font sizes
 # Want to randmoize obsfucation/noise between some reasonable range
-# Want to output label (char) and x, y, w, h of bbx (x, y, being center of bbx?)
 # Want to randomly add random degree of blur to image
+# Want to output stats of data used.
 
 # Best way to achieve lighting condtions?
 ## Want to mimic lighting conditions (range between white and red, saturation)?
@@ -122,6 +124,9 @@ for idx, bbx in enumerate(char_size):
 
     labels.append(label)
     offset[0] = x2
+
+# Blur image
+img = img.filter(ImageFilter.GaussianBlur(rnd_uniform(0.0, 3.0)))
 
 for lbl in labels:
     print lbl
