@@ -6,6 +6,7 @@ from string import ascii_lowercase as chars_lower
 from skimage.util import random_noise
 from random import uniform as rnd_uniform
 
+import numpy as np
 '''
 Need to consider changing of how YOLO splits the image
 into 7x7 sections. Since we know initially we will
@@ -127,6 +128,12 @@ for idx, bbx in enumerate(char_size):
 
 # Blur image
 img = img.filter(ImageFilter.GaussianBlur(rnd_uniform(0.0, 3.0)))
+
+# Noise Image
+npim = np.asarray(img)
+noise = random_noise(npim, 'speckle')
+res = npim * noise
+img = Image.fromarray(np.uint8(res))
 
 for lbl in labels:
     print lbl
