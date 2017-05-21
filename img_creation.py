@@ -132,7 +132,8 @@ img = img.filter(ImageFilter.GaussianBlur(rnd_uniform(0.0, 3.0)))
 # Noise Image
 npim = np.asarray(img)
 noise = random_noise(npim, 'speckle')
-res = npim * noise
+bw_noise = np.rint(noise)
+res = npim * bw_noise
 img = Image.fromarray(np.uint8(res))
 
 for lbl in labels:
