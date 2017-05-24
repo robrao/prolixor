@@ -127,7 +127,8 @@ for idx, bbx in enumerate(char_size):
     offset[0] = x2
 
 # Blur image
-img = img.filter(ImageFilter.GaussianBlur(rnd_uniform(0.0, 3.0)))
+rnd_blur = rnd_uniform(0.0, 20.0) * im_h_f/1000
+img = img.filter(ImageFilter.GaussianBlur(rnd_blur))
 
 # Noise Image
 npim = np.asarray(img)
