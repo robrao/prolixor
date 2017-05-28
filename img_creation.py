@@ -49,7 +49,8 @@ im_h_f = font_size + im_w_f * 0.1
 im_w = int(im_w_f)
 im_h = int(im_h_f)
 
-img = Image.new('RGBA', (im_w, im_h), 'white') #randomize background
+# randomize background on image
+img = Image.new('RGBA', (im_w, im_h), 'white')
 draw = ImageDraw.Draw(img, "RGBA")
 dw, dh = draw.textsize(word, font)
 
@@ -95,7 +96,9 @@ img = img.filter(ImageFilter.GaussianBlur(rnd_blur))
 
 # Noise Image
 npim = np.asarray(img)
-noise = random_noise(npim, 'speckle', mean=0, var=0.01)
+noise = random_noise(
+        npim, 'speckle', mean=rnd_uniform(0, 2), var=rnd_uniform(0.01, 0.1)
+)
 res = npim * noise
 img = Image.fromarray(np.uint8(res))
 
