@@ -12,8 +12,8 @@ import numpy as np
 # Randomize number of chars in image
 # Supercalifragilisticexpialidocious
 font_size = randint(10, 150)
-max_chars = int(34 * (1/(font_size/10)))
-rnd_size = randint(1, 34)
+max_chars = int(34 * (1/(font_size/10.0)))
+rnd_size = randint(1, max_chars)
 chars = deque(maxlen=rnd_size)
 
 # Randomize shade of black
