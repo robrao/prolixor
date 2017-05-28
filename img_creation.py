@@ -7,54 +7,17 @@ from skimage.util import random_noise
 from random import uniform as rnd_uniform
 
 import numpy as np
-'''
-Need to consider changing of how YOLO splits the image
-into 7x7 sections. Since we know initially we will
-only want a single word highlighted by the user. This
-should remove the need for a vertical split. 1x9?
-Make the split a function of the length of pixels?
 
-How to make a unreplicatable Test Set?
--> set different rand seed for Test and Train?
 
-LSTM to find all need chars?
--> Clustering will handle that for now
-
-Allow user to highlight word
-
-Recalculate anchor boxes using ground truth.
-'''
-
-# Want to randomize orientation of char (between 0-30 degress)
-# Want to randomize image resolutions between (Note4 - S8)
-# Want to randomize density of chars (Thin, Bold, Medium)
-# Want to randomize italics, and none italics
-# Want to randomize top 20 publishing Fonts
-# Want to randomize top 5 publishing font sizes
-# Want to randmoize obsfucation/noise between some reasonable range
-# Want to randomly add random degree of blur to image
-# Want to output stats of data used.
-
-# Best way to achieve lighting condtions?
-## Want to mimic lighting conditions (range between white and red, saturation)?
-## Want different degrees of background white (mimic lighting)?
-
-# Want bash script to download all the necessary fonts
-
-# Output 26 chars
-# --> No word contains numbers
-# Always white background
-# Can download TTF files from https://fonts.google.com
-
-## Randomize number of chars in image
-## Supercalifragilisticexpialidocious
+# Randomize number of chars in image
+# Supercalifragilisticexpialidocious
 font_size = randint(10, 150)
 max_chars = int(34 * (1/(font_size/10)))
 rnd_size = randint(1, 34)
 chars = deque(maxlen=rnd_size)
 
-## Randomize shade of black
-## 90 arbitrary number
+# Randomize shade of black
+# 90 arbitrary number
 rnd_shade = randint(0, 90)
 rnd_red = rnd_shade + randint(0, 2)
 rnd_blue = rnd_shade + randint(0, 2)
@@ -63,7 +26,7 @@ rnd_alpha = rnd_shade + randint(0, 2)
 
 rnd_black = (rnd_red, rnd_blue, rnd_green, rnd_alpha)
 
-## Randomize chars
+# Randomize chars
 chars_num = []
 for i in range(0, rnd_size):
     rnd = randint(0, 25)
