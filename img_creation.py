@@ -13,6 +13,11 @@ PERSPECTIVE NOTES:
     - stackoverflow: https://stackoverflow.com/questions/14177744/how-does-perspective-transformation-work-in-pil
     - ubc notes on trans: http://www.math.ubc.ca/~cass/graphics/Perspective.pdf
     - PIL image transform: http://pillow.readthedocs.io/en/3.4.x/reference/Image.html#PIL.Image.Image.transform
+
+ISSUES:
+    - This will require adjustments to bounding box points
+        -- Should be able to apply the same transformation to bbx points
+        and get updated bbx points
 '''
 
 # Randomize number of chars in image
@@ -107,6 +112,14 @@ noise = random_noise(
 )
 res = npim * noise
 img = Image.fromarray(np.uint8(res))
+
+# Perspective manipulation
+m = -0.5
+width, height = img.size
+xshift = abs(m) * width
+new_width = width + int(round(xshift))
+img = img.transform((new_width, height), Image.AFFINE,
+                (1, m, -xshift if m > 0 else 0, 0, 1, 0), Image.BICUBIC)
 
 for lbl in labels:
     print lbl
