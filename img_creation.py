@@ -8,6 +8,12 @@ from random import uniform as rnd_uniform
 
 import numpy as np
 
+'''
+PERSPECTIVE NOTES:
+    - stackoverflow: https://stackoverflow.com/questions/14177744/how-does-perspective-transformation-work-in-pil
+    - ubc notes on trans: http://www.math.ubc.ca/~cass/graphics/Perspective.pdf
+    - PIL image transform: http://pillow.readthedocs.io/en/3.4.x/reference/Image.html#PIL.Image.Image.transform
+'''
 
 # Randomize number of chars in image
 # Supercalifragilisticexpialidocious
