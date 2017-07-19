@@ -22,10 +22,10 @@ ISSUES:
 
 # Randomize number of chars in image
 # Supercalifragilisticexpialidocious
-font_size = randint(10, 150)
+font_size = randint(30, 150)
 max_chars = int(34 * (1/(font_size/10.0)))
-rnd_size = randint(1, max_chars)
-chars = deque(maxlen=rnd_size)
+num_chars = randint(1, max_chars)
+chars = deque(maxlen=num_chars)
 
 # Randomize shade of black
 # 90 arbitrary number
@@ -39,7 +39,7 @@ rnd_black = (rnd_red, rnd_blue, rnd_green, rnd_alpha)
 
 # Randomize chars
 chars_num = []
-for i in range(0, rnd_size):
+for i in range(0, num_chars):
     rnd = randint(0, 25)
     c = chars_lower[rnd]
     chars.append(c)
@@ -53,9 +53,9 @@ for i in [0]:
     font = ImageFont.truetype("/Users/robbyrao/Downloads/Roboto/Roboto-Black.ttf", size=font_size)
 
 # font size need to change in relation to image size
-# word should be randomly moved x+0.5, y+0.5 from the center
-# of the image
-im_w_f = font_size * rnd_size * 0.61
+buff_size = font_size * num_chars * 0.5  # allow crop of image after transform
+
+im_w_f = font_size * num_chars * 0.61 + buff_size
 im_h_f = font_size + im_w_f * 0.1
 im_w = int(im_w_f)
 im_h = int(im_h_f)
@@ -83,6 +83,10 @@ draw.text((txtx, txty), word, rnd_black, font=font)
 
 offset = [txtx, txty]
 labels = []
+
+# these will be needed be recalculated after translation
+# should be able to use transformation formula to find
+# corners [x1, y1, x2, y2]
 for idx, bbx in enumerate(char_size):
     x1 = offset[0]
     y1 = offset[1]
@@ -108,18 +112,48 @@ img = img.filter(ImageFilter.GaussianBlur(rnd_blur))
 # Noise Image
 npim = np.asarray(img)
 noise = random_noise(
-        npim, 'speckle', mean=rnd_uniform(0, 2), var=rnd_uniform(0.01, 0.1)
+          npim, 'speckle', mean=rnd_uniform(0, 2), var=rnd_uniform(0.01, 0.1)
 )
 res = npim * noise
 img = Image.fromarray(np.uint8(res))
 
 # Perspective manipulation
-m = -0.5
+m = rnd_uniform(-1, 1)
+print("m: {}".format(m))
 width, height = img.size
 xshift = abs(m) * width
 new_width = width + int(round(xshift))
+# can do transform with tf.contrib.image.transform (also can do batch)
+# does it same manner
+
+# tilt left or right, still need to tilt up and down
 img = img.transform((new_width, height), Image.AFFINE,
-                    (1, m, -xshift if m > 0 else 0, 0, 1, 0), Image.BICUBIC)
+                    data=(1, m, -xshift if m > 0 else 0, 0, 1, 0),
+                    resample=Image.BICUBIC)
+
+if m < 0:
+    pass
+    # use bottom left corner, and top right corner for cropping
+elif m > 0:
+    pass
+    # use top left corner, and bottom right corner for cropping
+
+'''
+Possible method for rotation
+
+import tensorflow as tf
+from PIL import Image
+
+image_decoded = tf.image.decode_jpeg(tf.read_file('imgname.jpg'), channels=3)
+pim = Image.open('imgname.jpg')
+rot_im = tf.contrib.image.angles_to_projective_transforms(45, pim.size[1], pim.size[0])
+enc = tf.image.encode_jpeg(cropped)
+fname = tf.constant('2.jpg')
+fwrite = tf.write_file(fname, enc)
+
+sess = tf.Session()
+result = sess.run(fwrite)
+'''
 
 for lbl in labels:
     print lbl
