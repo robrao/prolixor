@@ -56,10 +56,13 @@ dw, dh = draw.textsize(word, font)
 
 # per char size
 char_size = []
+char_offset = []
 for c in chars:
     w, h = draw.textsize(c, font)
     csize = (w, h)
+    offset = font.getoffset(c)
     char_size.append(csize)
+    char_offset.append(offset)
 
 cent_w = (im_w - dw) / 2.0
 cent_h = (im_h - dh) / 2.0
@@ -73,8 +76,10 @@ draw.text((txtx, txty), word, rnd_black, font=font)
 offset = [txtx, txty]
 labels = []
 for idx, bbx in enumerate(char_size):
-    x1 = offset[0]
-    y1 = offset[1]
+    charoffset_x, charoffset_y = char_offset[idx]
+
+    x1 = offset[0] + charoffset_x
+    y1 = offset[1] + charoffset_y
     x2 = offset[0] + bbx[0]
     y2 = offset[1] + bbx[1]
 
