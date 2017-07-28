@@ -42,8 +42,8 @@ for i in [0]:
     font = ImageFont.truetype("/Users/robbyrao/Downloads/Roboto/Roboto-Black.ttf", size=font_size)
 
 # Image size changes in relation to font size
-im_w_f = font_size * num_chars * 0.61 ## BUG: caused by 0.61 multiplication
-im_h_f = font_size + im_w_f * 0.1 ## BUG: caused by 0.1 multiplication
+im_w_f = font_size * num_chars
+im_h_f = font_size + im_w_f
 im_w = int(im_w_f)
 im_h = int(im_h_f)
 
