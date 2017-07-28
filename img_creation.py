@@ -11,10 +11,10 @@ import numpy as np
 
 # Randomize number of chars in image
 # Supercalifragilisticexpialidocious
-font_size = randint(10, 150)
+font_size = randint(30, 150)
 max_chars = int(34 * (1/(font_size/10.0)))
-rnd_size = randint(1, max_chars)
-chars = deque(maxlen=rnd_size)
+num_chars = randint(1, max_chars)
+chars = deque(maxlen=num_chars)
 
 # Randomize shade of black
 # 90 arbitrary number
@@ -28,7 +28,7 @@ rnd_black = (rnd_red, rnd_blue, rnd_green, rnd_alpha)
 
 # Randomize chars
 chars_num = []
-for i in range(0, rnd_size):
+for i in range(0, num_chars):
     rnd = randint(0, 25)
     c = chars_lower[rnd]
     chars.append(c)
@@ -41,11 +41,9 @@ word = "".join(chars)
 for i in [0]:
     font = ImageFont.truetype("/Users/robbyrao/Downloads/Roboto/Roboto-Black.ttf", size=font_size)
 
-# font size need to change in relation to image size
-# word should be randomly moved x+0.5, y+0.5 from the center
-# of the image
-im_w_f = font_size * rnd_size * 0.61
-im_h_f = font_size + im_w_f * 0.1
+# Image size changes in relation to font size
+im_w_f = font_size * num_chars
+im_h_f = font_size + im_w_f
 im_w = int(im_w_f)
 im_h = int(im_h_f)
 
