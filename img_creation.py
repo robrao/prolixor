@@ -1,4 +1,7 @@
 #!/usr/bin/python
+import os
+import fnmatch
+
 from random import randint, choice
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from collections import deque
@@ -9,103 +12,106 @@ from random import uniform as rnd_uniform
 import numpy as np
 
 
-# Randomize number of chars in image
-# Supercalifragilisticexpialidocious
-font_size = randint(30, 150)
-max_chars = int(34 * (1/(font_size/10.0)))
-num_chars = randint(1, max_chars)
-chars = deque(maxlen=num_chars)
+fonts = []
+for root, dirnames, filenames in os.walk('./fonts/fonts-master/'):
+    for filename in fnmatch.filter(filenames, '*.ttf'):
+        fonts.append(os.path.join(root, filename))
 
-# Randomize shade of black
-# 90 arbitrary number
-rnd_shade = randint(0, 90)
-rnd_red = rnd_shade + randint(0, 2)
-rnd_blue = rnd_shade + randint(0, 2)
-rnd_green = rnd_shade + randint(0, 2)
-rnd_alpha = rnd_shade + randint(0, 2)
+for idx in range(0, 10):
+    # Randomize number of chars in image
+    # Supercalifragilisticexpialidocious
+    font_size = randint(30, 150)
+    max_chars = int(34 * (1/(font_size/10.0)))
+    num_chars = randint(1, max_chars)
+    chars = deque(maxlen=num_chars)
 
-rnd_black = (rnd_red, rnd_blue, rnd_green, rnd_alpha)
+    # Randomize shade of black
+    # 90 arbitrary number
+    rnd_shade = randint(0, 90)
+    rnd_red = rnd_shade + randint(0, 2)
+    rnd_blue = rnd_shade + randint(0, 2)
+    rnd_green = rnd_shade + randint(0, 2)
+    rnd_alpha = rnd_shade + randint(0, 2)
 
-# Randomize chars
-chars_num = []
-for i in range(0, num_chars):
-    rnd = randint(0, 25)
-    c = chars_lower[rnd]
-    chars.append(c)
-    chars_num.append(rnd)
+    rnd_black = (rnd_red, rnd_blue, rnd_green, rnd_alpha)
 
-# Initially user will highlight single word
-# so only need single word per image
-word = "".join(chars)
+    # Randomize chars
+    chars_num = []
+    for i in range(0, num_chars):
+        rnd = randint(0, 25)
+        c = chars_lower[rnd]
+        chars.append(c)
+        chars_num.append(rnd)
 
-for i in [0]:
-    font = ImageFont.truetype("/Users/robbyrao/Downloads/Roboto/Roboto-Black.ttf", size=font_size)
+    # Initially user will highlight single word
+    # so only need single word per image
+    word = "".join(chars)
 
-# Image size changes in relation to font size
-im_w_f = font_size * num_chars
-im_h_f = font_size + im_w_f
-im_w = int(im_w_f)
-im_h = int(im_h_f)
+    font_path = fonts[randint(0, len(fonts))]
+    font = ImageFont.truetype(font_path, size=font_size)
 
-# randomize background on image
-img = Image.new('RGBA', (im_w, im_h), 'white')
-draw = ImageDraw.Draw(img, "RGBA")
-dw, dh = draw.textsize(word, font)
+    # Image size changes in relation to font size
+    im_w_f = font_size * num_chars
+    im_h_f = font_size + im_w_f
+    im_w = int(im_w_f)
+    im_h = int(im_h_f)
 
-# per char size
-char_size = []
-char_offset = []
-for c in chars:
-    w, h = draw.textsize(c, font)
-    csize = (w, h)
-    offset = font.getoffset(c)
-    char_size.append(csize)
-    char_offset.append(offset)
+    # randomize background on image
+    img = Image.new('RGBA', (im_w, im_h), 'white')
+    draw = ImageDraw.Draw(img, "RGBA")
+    dw, dh = draw.textsize(word, font)
 
-cent_w = (im_w - dw) / 2.0
-cent_h = (im_h - dh) / 2.0
-x_jitter = randint(0, int((im_w - dw) * 0.25)) * choice([-1, 1])
-y_jitter = randint(0, int((im_h - dh) * 0.25)) * choice([-1, 1])
-txtx = cent_w + x_jitter
-txty = cent_h + y_jitter
+    # per char size
+    char_size = []
+    char_offset = []
+    for c in chars:
+        w, h = draw.textsize(c, font)
+        csize = (w, h)
+        offset = font.getoffset(c)
+        char_size.append(csize)
+        char_offset.append(offset)
 
-draw.text((txtx, txty), word, rnd_black, font=font)
+    cent_w = (im_w - dw) / 2.0
+    cent_h = (im_h - dh) / 2.0
+    x_jitter = randint(0, int((im_w - dw) * 0.25)) * choice([-1, 1])
+    y_jitter = randint(0, int((im_h - dh) * 0.25)) * choice([-1, 1])
+    txtx = cent_w + x_jitter
+    txty = cent_h + y_jitter
 
-offset = [txtx, txty]
-labels = []
-for idx, bbx in enumerate(char_size):
-    charoffset_x, charoffset_y = char_offset[idx]
+    draw.text((txtx, txty), word, rnd_black, font=font)
 
-    x1 = offset[0] + charoffset_x
-    y1 = offset[1] + charoffset_y
-    x2 = offset[0] + bbx[0]
-    y2 = offset[1] + bbx[1]
+    offset = [txtx, txty]
+    labels = []
+    for idx, bbx in enumerate(char_size):
+        charoffset_x, charoffset_y = char_offset[idx]
 
-    w = bbx[0]/im_w_f
-    h = bbx[1]/im_h_f
-    cx = (x1 + 0.5 * bbx[0])/im_w_f
-    cy = (y1 + 0.5 * bbx[1])/im_h_f
+        x1 = offset[0] + charoffset_x
+        y1 = offset[1] + charoffset_y
+        x2 = offset[0] + bbx[0]
+        y2 = offset[1] + bbx[1]
 
-    draw.rectangle([x1, y1, x2, y2], outline='red')
+        w = bbx[0]/im_w_f
+        h = bbx[1]/im_h_f
+        cx = (x1 + 0.5 * bbx[0])/im_w_f
+        cy = (y1 + 0.5 * bbx[1])/im_h_f
 
-    label = "{} {} {} {} {}".format(chars_num[idx], cx, cy, w, h)
+        draw.rectangle([x1, y1, x2, y2], outline='red')
 
-    labels.append(label)
-    offset[0] = x2
+        label = "{} {} {} {} {}".format(chars_num[idx], cx, cy, w, h)
 
-# Blur image
-rnd_blur = rnd_uniform(0.0, 20.0) * im_h_f/1000
-img = img.filter(ImageFilter.GaussianBlur(rnd_blur))
+        labels.append(label)
+        offset[0] = x2
 
-# Noise Image
-npim = np.asarray(img)
-noise = random_noise(
-        npim, 'speckle', mean=rnd_uniform(0, 2), var=rnd_uniform(0.01, 0.1)
-)
-res = npim * noise
-img = Image.fromarray(np.uint8(res))
+    # Blur image
+    rnd_blur = rnd_uniform(0.0, 20.0) * im_h_f/1000
+    img = img.filter(ImageFilter.GaussianBlur(rnd_blur))
 
-for lbl in labels:
-    print lbl
+    # Noise Image
+    npim = np.asarray(img)
+    noise = random_noise(
+            npim, 'speckle', mean=rnd_uniform(0, 2), var=rnd_uniform(0.01, 0.1)
+    )
+    res = npim * noise
+    img = Image.fromarray(np.uint8(res))
 
-img.save("imgname.jpg", "JPEG", dpi=(600, 600))
+    img.save("imgname_{}.jpg".format(idx), "JPEG", dpi=(600, 600))
