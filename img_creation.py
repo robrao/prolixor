@@ -17,12 +17,14 @@ for root, dirnames, filenames in os.walk('./fonts/fonts-master/'):
     for filename in fnmatch.filter(filenames, '*.ttf'):
         fonts.append(os.path.join(root, filename))
 
-for idx in range(0, 10):
+# for idx in range(0, 10):
+for count, font_path in enumerate(fonts):
     # Randomize number of chars in image
     # Supercalifragilisticexpialidocious
     font_size = randint(30, 150)
     max_chars = int(34 * (1/(font_size/10.0)))
-    num_chars = randint(1, max_chars)
+    # num_chars = randint(1, max_chars) DEBUGGING troublesome fonts
+    num_chars = randint(5, 7)
     chars = deque(maxlen=num_chars)
 
     # Randomize shade of black
@@ -47,7 +49,7 @@ for idx in range(0, 10):
     # so only need single word per image
     word = "".join(chars)
 
-    font_path = fonts[randint(0, len(fonts))]
+    # font_path = fonts[randint(0, len(fonts))] DEBUGGING troublesome fonts
     font = ImageFont.truetype(font_path, size=font_size)
 
     # Image size changes in relation to font size
@@ -103,7 +105,8 @@ for idx in range(0, 10):
         offset[0] = x2
 
     # Blur image
-    rnd_blur = rnd_uniform(0.0, 20.0) * im_h_f/1000
+    # rnd_blur = rnd_uniform(0.0, 15.0) * im_h_f/1000
+    rnd_blur = rnd_uniform(0.0, 1.0) * im_h_f/1000
     img = img.filter(ImageFilter.GaussianBlur(rnd_blur))
 
     # Noise Image
@@ -114,4 +117,14 @@ for idx in range(0, 10):
     res = npim * noise
     img = Image.fromarray(np.uint8(res))
 
-    img.save("imgname_{}.jpg".format(idx), "JPEG", dpi=(600, 600))
+    # DEBUGGING troublesome fonts
+    font_name = os.path.basename(font_path).split(".")[0]
+    title = "{}_{}".format(font_name, count)
+    print title
+    # img.save("imgname.jpg", "JPEG", dpi=(600, 600))
+    img.show()
+    dl_pic = raw_input("Delete {}? [y/N]: ".format(font_path))
+
+    if dl_pic == "y":
+        print "DELETE!"
+        # os.remove(font_path)
