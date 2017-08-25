@@ -12,19 +12,32 @@ from random import uniform as rnd_uniform
 import numpy as np
 
 
+def pixel_search(img, x_coord, y_coord, height):
+    y_initial = y_coord
+    y_final = y_coord + height
+
+    while y_coord < y_final:
+        if img.getpixel((x_coord, y_coord)) != (255, 255, 255, 255):  # does not match background values
+            x_coord -= 0.1  # shift to the left
+            y_coord = y_initial
+
+        y_coord += 0.1
+    return x_coord
+
 fonts = []
 for root, dirnames, filenames in os.walk('./fonts/fonts-master/'):
     for filename in fnmatch.filter(filenames, '*.ttf'):
         fonts.append(os.path.join(root, filename))
 
-for count, font_path in enumerate(fonts):
+for count, font_path in enumerate([fonts[0]]):
     font_size = 55
     num_chars = 26
     chars = deque(maxlen=num_chars)
     rnd_black = (0,0,0,0)
 
     chars_num = []
-    for i in range(0, num_chars):
+    # for i in range(0, num_chars):
+    for i in [5, 6, 7]:
         c = chars_lower[i]
         chars.append(c)
 
@@ -65,9 +78,11 @@ for count, font_path in enumerate(fonts):
     offset = [x_txt, y_txt]
     for idx, bbx in enumerate(char_size):
         charoffset_x, charoffset_y = char_offset[idx]
-        print "{} -- offset: {} {}".format(idx, charoffset_x, charoffset_y);
-        x1 = offset[0] #+ charoffset_x
+        x1 = offset[0] + charoffset_x
         y1 = offset[1] + charoffset_y
+
+        x1 = pixel_search(img, x1, y1, bbx[1])
+
         x2 = bbx[0] + offset[0]
         y2 = bbx[1] + offset[1]
         w = bbx[0]/im_w_f
@@ -76,12 +91,11 @@ for count, font_path in enumerate(fonts):
         cy = (y1 + 0.5 * bbx[1])/im_h_f
 
         draw.rectangle([x1, y1, x2, y2], outline='red')
-        
-        offset[0] = x2 # THIS IS THE BUG!!!!!!!!
 
+        offset[0] = x2  # THIS IS THE BUG!!!!!!!!
 
     font_name = os.path.basename(font_path).split(".")[0]
     title = "{}_{}".format(font_name, count)
     print title
     img.show()
-    dl_pic = raw_input("Delete {}? [y/N]: ".format(font_path))
+    # dl_pic = raw_input("Delete {}? [y/N]: ".format(font_path))
