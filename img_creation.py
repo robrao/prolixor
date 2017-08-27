@@ -12,20 +12,32 @@ from random import uniform as rnd_uniform
 import numpy as np
 
 
-def pixel_search(img, x_coord, y_coord, height):
+def max_value_search(img, x_coord, y_coord, width):
+    x_previous = x_coord
+    x_final = x_coord + width
+    max_val = img.getpixel((x_coord, y_coord))
+    background_value = img.getpixel((0, 0))
+
+    while x_coord < x_final:
+        if img.getpixel((x_coord, y_coord)) >= img.getpixel((x_previous, y_coord)):
+            if img.getpixel((x_coord, y_coord)) < background_value:
+                max_val = img.getpixel((x_coord, y_coord))
+
+        x_previous = x_coord
+        x_coord += 0.1
+
+    return max_val
+
+def pixel_search(img, x_coord, y_coord, height, max_val):
     y_initial = y_coord
     y_final = y_coord + height
     count = 0
 
     while y_coord < y_final:
-        if img.getpixel((x_coord, y_coord)) < (255, 255, 255, 255):  # does not match background values
+        if img.getpixel((x_coord, y_coord)) < max_val:  # does not match background values
             count += 1
-            x_coord -= 1  # shift to the left
+            x_coord -= 0.1  # shift to the left
             y_coord = y_initial
-            print count
-            if count > 8:
-                print img.getpixel((x_coord, y_coord))
-                break
 
         y_coord += 0.1
     return x_coord
@@ -43,7 +55,7 @@ for count, font_path in enumerate([fonts[0]]):
 
     chars_num = []
     # for i in range(0, num_chars):
-    for i in [5, 6]:
+    for i in [5, 6, 7]:
         c = chars_lower[i]
         chars.append(c)
 
@@ -87,9 +99,11 @@ for count, font_path in enumerate([fonts[0]]):
         x1 = offset[0] + charoffset_x
         y1 = offset[1] + charoffset_y
 
-        x1 = pixel_search(img, x1, y1, bbx[1])
+        max_val = max_value_search(img, x1, y1, bbx[0])
+        x1 = pixel_search(img, x1, y1, bbx[1], max_val)
 
-        x2 = bbx[0] + offset[0]
+        # x2 = bbx[0] + offset[0]
+        x2 = bbx[0] + x1
         y2 = bbx[1] + offset[1]
         w = bbx[0]/im_w_f
         h = bbx[1]/im_h_f
