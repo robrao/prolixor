@@ -15,11 +15,17 @@ import numpy as np
 def pixel_search(img, x_coord, y_coord, height):
     y_initial = y_coord
     y_final = y_coord + height
+    count = 0
 
     while y_coord < y_final:
-        if img.getpixel((x_coord, y_coord)) != (255, 255, 255, 255):  # does not match background values
-            x_coord -= 0.1  # shift to the left
+        if img.getpixel((x_coord, y_coord)) < (255, 255, 255, 255):  # does not match background values
+            count += 1
+            x_coord -= 1  # shift to the left
             y_coord = y_initial
+            print count
+            if count > 8:
+                print img.getpixel((x_coord, y_coord))
+                break
 
         y_coord += 0.1
     return x_coord
@@ -37,7 +43,7 @@ for count, font_path in enumerate([fonts[0]]):
 
     chars_num = []
     # for i in range(0, num_chars):
-    for i in [5, 6, 7]:
+    for i in [5, 6]:
         c = chars_lower[i]
         chars.append(c)
 
