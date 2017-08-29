@@ -30,12 +30,12 @@ def max_value_search(img, x_coord, y_coord, font_colour, width):
 
     return max_val
 
-def pixel_search(img, x_coord, y_coord, height, max_val):
+
+def pixel_search(img, x_coord, y_coord, height, img_height, max_val):
     y_initial = y_coord
     y_final = y_coord + height
 
-    while y_coord < y_final:
-        print "x: {}, y: {}, y_final: {}".format(x_coord, y_coord, y_final)
+    while y_coord < y_final and y_coord < img_height:
         if img.getpixel((x_coord, y_coord)) < max_val:  # does not match background values
             x_coord -= 0.1  # shift to the left
             y_coord = y_initial
@@ -119,11 +119,11 @@ for idx in range(0, 10):
 
         x1 = offset[0] + charoffset_x
         y1 = offset[1] + charoffset_y
-        x2 = offset[0] + bbx[0]
+        x2 = offset[0] + bbx[0] + charoffset_x
         y2 = offset[1] + bbx[1]
 
         max_val = max_value_search(img, x1, y1, rnd_black, bbx[0])
-        x1 = pixel_search(img, x1, y1, bbx[1], max_val)
+        x1 = pixel_search(img, x1, y1, bbx[1], im_h, max_val)
 
         w = bbx[0]/im_w_f
         h = bbx[1]/im_h_f
