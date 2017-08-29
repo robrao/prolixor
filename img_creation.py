@@ -12,6 +12,38 @@ from random import uniform as rnd_uniform
 import numpy as np
 
 
+def max_value_search(img, x_coord, y_coord, font_colour, width):
+    x_previous = x_coord
+    x_final = x_coord + width
+    max_val = img.getpixel((x_coord, y_coord))
+    background_value = img.getpixel((0, 0))
+
+    while x_coord < x_final:
+        current_pixel = img.getpixel((x_coord, y_coord))
+
+        if current_pixel >= img.getpixel((x_previous, y_coord)):
+            if current_pixel < background_value and current_pixel > font_colour:
+                max_val = img.getpixel((x_coord, y_coord))
+
+        x_previous = x_coord
+        x_coord += 0.1
+
+    return max_val
+
+def pixel_search(img, x_coord, y_coord, height, max_val):
+    y_initial = y_coord
+    y_final = y_coord + height
+
+    while y_coord < y_final:
+        print "x: {}, y: {}, y_final: {}".format(x_coord, y_coord, y_final)
+        if img.getpixel((x_coord, y_coord)) < max_val:  # does not match background values
+            x_coord -= 0.1  # shift to the left
+            y_coord = y_initial
+
+        y_coord += 0.1
+
+    return x_coord
+
 fonts = []
 for root, dirnames, filenames in os.walk('./fonts/fonts-master/'):
     for filename in fnmatch.filter(filenames, '*.ttf'):
@@ -90,6 +122,9 @@ for idx in range(0, 10):
         x2 = offset[0] + bbx[0]
         y2 = offset[1] + bbx[1]
 
+        max_val = max_value_search(img, x1, y1, rnd_black, bbx[0])
+        x1 = pixel_search(img, x1, y1, bbx[1], max_val)
+
         w = bbx[0]/im_w_f
         h = bbx[1]/im_h_f
         cx = (x1 + 0.5 * bbx[0])/im_w_f
@@ -114,4 +149,5 @@ for idx in range(0, 10):
     res = npim * noise
     img = Image.fromarray(np.uint8(res))
 
-    img.save("imgname_{}.jpg".format(idx), "JPEG", dpi=(600, 600))
+    img.show()
+    # img.save("imgname_{}.jpg".format(idx), "JPEG", dpi=(600, 600))
