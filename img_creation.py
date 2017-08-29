@@ -12,15 +12,16 @@ from random import uniform as rnd_uniform
 import numpy as np
 
 
-def max_value_search(img, x_coord, y_coord, width):
+def max_value_search(img, x_coord, y_coord, font_colour, width):
     x_previous = x_coord
     x_final = x_coord + width
     max_val = img.getpixel((x_coord, y_coord))
     background_value = img.getpixel((0, 0))
 
     while x_coord < x_final:
-        if img.getpixel((x_coord, y_coord)) >= img.getpixel((x_previous, y_coord)):
-            if img.getpixel((x_coord, y_coord)) < background_value:
+        current_pixel = img.getpixel((x_coord, y_coord))
+        if current_pixel >= img.getpixel((x_previous, y_coord)):
+            if current_pixel < background_value and current_pixel > font_colour:
                 max_val = img.getpixel((x_coord, y_coord))
 
         x_previous = x_coord
@@ -54,8 +55,8 @@ for count, font_path in enumerate([fonts[0]]):
     rnd_black = (0,0,0,0)
 
     chars_num = []
-    # for i in range(0, num_chars):
-    for i in [5, 6, 7]:
+    for i in range(0, num_chars):
+    # for i in [5, 6, 7]:
         c = chars_lower[i]
         chars.append(c)
 
@@ -99,10 +100,9 @@ for count, font_path in enumerate([fonts[0]]):
         x1 = offset[0] + charoffset_x
         y1 = offset[1] + charoffset_y
 
-        max_val = max_value_search(img, x1, y1, bbx[0])
+        max_val = max_value_search(img, x1, y1, rnd_black, bbx[0])
         x1 = pixel_search(img, x1, y1, bbx[1], max_val)
 
-        # x2 = bbx[0] + offset[0]
         x2 = bbx[0] + x1
         y2 = bbx[1] + offset[1]
         w = bbx[0]/im_w_f
