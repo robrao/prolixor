@@ -49,7 +49,7 @@ if __name__ == "__main__":
         for filename in fnmatch.filter(filenames, '*.ttf'):
             fonts.append(os.path.join(root, filename))
     
-    for count, font_path in enumerate([fonts[1]]):
+    for count, font_path in enumerate(fonts):
         font_size = 55
         num_chars = 26
         chars = deque(maxlen=num_chars)
