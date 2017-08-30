@@ -120,11 +120,12 @@ if __name__ == "__main__":
 
             x1 = offset[0] + charoffset_x
             y1 = offset[1] + charoffset_y
-            x2 = offset[0] + bbx[0] + charoffset_x
-            y2 = offset[1] + bbx[1]
 
             max_val = max_value_search(img, x1, y1, rnd_black, bbx[0])
             x1 = pixel_search(img, x1, y1, bbx[1], im_h, max_val)
+
+            x2 = x1 + bbx[0]
+            y2 = offset[1] + bbx[1]
 
             w = bbx[0]/im_w_f
             h = bbx[1]/im_h_f
