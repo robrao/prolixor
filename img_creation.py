@@ -29,7 +29,7 @@ def max_value_search(img, x_coord, y_coord, font_colour, width):
 
     return max_val
 
-def pixel_search(img, x_coord, y_coord, height, max_val):
+def pixel_search(img, anchor, x_coord, y_coord, height, max_val):
     y_initial = y_coord
     y_final = y_coord + height
     count = 0
@@ -37,8 +37,14 @@ def pixel_search(img, x_coord, y_coord, height, max_val):
     while y_coord < y_final:
         if img.getpixel((x_coord, y_coord)) < max_val:  # does not match background values
             count += 1
-            x_coord -= 0.1  # shift to the left
+            x_left = x_coord - 0.1  # shift to the left
+            x_right = x_coord + 0.1  # shift to the left
             y_coord = y_initial
+
+            if x_coord <= anchor:
+                x_left = pixel_search(img, anchor, x_left, y_coord, height, max_val)
+            elif x_coord >= anchor:
+                x_right = pixel_search(img, anchor, x_right, y_coord, height, max_val)
 
         y_coord += 0.1
     return x_coord
@@ -49,7 +55,7 @@ if __name__ == "__main__":
         for filename in fnmatch.filter(filenames, '*.ttf'):
             fonts.append(os.path.join(root, filename))
     
-    for count, font_path in enumerate(fonts):
+    for count, font_path in enumerate([fonts[0]]):
         font_size = 55
         num_chars = 26
         chars = deque(maxlen=num_chars)
@@ -95,13 +101,14 @@ if __name__ == "__main__":
         draw.text((x_txt, y_txt), word, rnd_black, font=font)
     
         offset = [x_txt, y_txt]
+        bbxs = []
         for idx, bbx in enumerate(char_size):
             charoffset_x, charoffset_y = char_offset[idx]
             x1 = offset[0] + charoffset_x
             y1 = offset[1] + charoffset_y
     
             max_val = max_value_search(img, x1, y1, rnd_black, bbx[0])
-            x1 = pixel_search(img, x1, y1, bbx[1], max_val)
+            x1 = pixel_search(img, x1, x1, y1, bbx[1], max_val)
     
             x2 = bbx[0] + x1
             y2 = bbx[1] + offset[1]
@@ -109,13 +116,22 @@ if __name__ == "__main__":
             h = bbx[1]/im_h_f
             cx = (x1 + 0.5 * bbx[0])/im_w_f
             cy = (y1 + 0.5 * bbx[1])/im_h_f
-    
+
+            # draw.rectangle([x1, y1, x2, y2], outline='red')
+            bbx = (x1, y1, x2, y2)
+            bbxs.append(bbx)
+
+            offset[0] = x2
+
+        for idx, bbx in enumerate(bbxs):
+            x1, y1, x2, y2 = bbx
             draw.rectangle([x1, y1, x2, y2], outline='red')
-    
-            offset[0] = x2  # THIS IS THE BUG!!!!!!!!
-    
-        font_name = os.path.basename(font_path).split(".")[0]
-        title = "{}_{}".format(font_name, count)
-        print title
+
+            img.show()
+            dl_pic = raw_input("Delete {}? [y/N]: ".format(font_path))
+
+        # font_name = os.path.basename(font_path).split(".")[0]
+        # title = "{}_{}".format(font_name, count)
+        # print title
         img.show()
-        dl_pic = raw_input("Delete {}? [y/N]: ".format(font_path))
+        # dl_pic = raw_input("Delete {}? [y/N]: ".format(font_path))
