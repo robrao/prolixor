@@ -32,21 +32,28 @@ def max_value_search(img, x_coord, y_coord, font_colour, width):
 def pixel_search(img, anchor, x_coord, y_coord, height, max_val):
     y_initial = y_coord
     y_final = y_coord + height
-    count = 0
 
     while y_coord < y_final:
         if img.getpixel((x_coord, y_coord)) < max_val:  # does not match background values
-            count += 1
-            x_left = x_coord - 0.1  # shift to the left
-            x_right = x_coord + 0.1  # shift to the left
+            x_coord -= 0.1  # shift to the left
             y_coord = y_initial
 
-            if x_coord <= anchor:
-                x_left = pixel_search(img, anchor, x_left, y_coord, height, max_val)
-            elif x_coord >= anchor:
-                x_right = pixel_search(img, anchor, x_right, y_coord, height, max_val)
+        y_coord += 0.1
+
+    x_left = x_coord
+    x_coord = anchor
+    y_coord = y_initial
+
+    while y_coord < y_final:
+        if img.getpixel((x_coord, y_coord)) < max_val:  # does not match background values
+            x_coord += 0.1  # shift to the left
+            y_coord = y_initial
 
         y_coord += 0.1
+
+    if abs(anchor - x_left) < abs(anchor - x_coord):
+        x_coord = x_left
+
     return x_coord
 
 if __name__ == "__main__":
@@ -127,8 +134,8 @@ if __name__ == "__main__":
             x1, y1, x2, y2 = bbx
             draw.rectangle([x1, y1, x2, y2], outline='red')
 
-            img.show()
-            dl_pic = raw_input("Delete {}? [y/N]: ".format(font_path))
+            # img.show()
+            # dl_pic = raw_input("Delete {}? [y/N]: ".format(font_path))
 
         # font_name = os.path.basename(font_path).split(".")[0]
         # title = "{}_{}".format(font_name, count)
