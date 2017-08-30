@@ -113,7 +113,10 @@ if __name__ == "__main__":
             charoffset_x, charoffset_y = char_offset[idx]
             x1 = offset[0] + charoffset_x
             y1 = offset[1] + charoffset_y
-    
+
+            if idx > 22:
+                import pudb;pu.db
+
             max_val = max_value_search(img, x1, y1, rnd_black, bbx[0])
             x1 = pixel_search(img, x1, x1, y1, bbx[1], max_val)
     
@@ -134,8 +137,10 @@ if __name__ == "__main__":
             x1, y1, x2, y2 = bbx
             draw.rectangle([x1, y1, x2, y2], outline='red')
 
-            # img.show()
-            # dl_pic = raw_input("Delete {}? [y/N]: ".format(font_path))
+            if idx > 21:
+                print "x1: {}, y1: {}, x2: {}, y2: {}".format(x1, y1, x2, y2)
+                img.show()
+                dl_pic = raw_input("Delete {}? [y/N]: ".format(font_path))
 
         # font_name = os.path.basename(font_path).split(".")[0]
         # title = "{}_{}".format(font_name, count)
