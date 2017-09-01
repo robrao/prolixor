@@ -29,30 +29,86 @@ def max_value_search(img, x_coord, y_coord, font_colour, width):
 
     return max_val
 
-def pixel_search(img, anchor, x_coord, y_coord, height, max_val):
+def pixel_search(img, x_coord, y_coord, height, max_val):
+    # if the number of pixels crossed less than the max value increase in that direction stop
+    # searching in that direction, and return without entering a value in to the incident list
+    # incident list will be a list of tuples: (x_coord, # of incidents)
+    # therefore the last number in the list will be the one with lowest incidents, and min
+    # movement in that direction
+
+    # first value in both lists will be the initial tuple
+    left_incidents = []
+    right_incidents = []
+    anchor = x_coord
     y_initial = y_coord
     y_final = y_coord + height
+    continue_search = True
 
-    while y_coord < y_final:
-        if img.getpixel((x_coord, y_coord)) < max_val:  # does not match background values
+    while continue_search:
+        incident_count = 0
+
+        while y_coord < y_final:
+            if img.getpixel((x_coord, y_coord)) < max_val:  # does not match background values
+                incident_count += 1
+
+                if len(left_incidents) > 1 \
+                        and left_incidents[-1] < incident_count:
+                    continue_search = False
+                    break
+
+            y_coord += 0.1
+
+        if continue_search:
+            left_incidents.append((x_coord, incident_count))
             x_coord -= 0.1  # shift to the left
             y_coord = y_initial
 
-        y_coord += 0.1
+        if left_incidents[-1][1] == 0:
+            break
 
+    # reset
     x_left = x_coord
     x_coord = anchor
     y_coord = y_initial
+    continue_search = True
 
-    while y_coord < y_final:
-        if img.getpixel((x_coord, y_coord)) < max_val:  # does not match background values
-            x_coord += 0.1  # shift to the left
+    while continue_search:
+        incident_count = 0
+
+        while y_coord < y_final:
+            if img.getpixel((x_coord, y_coord)) < max_val:  # does not match background values
+                incident_count += 1
+
+                if len(right_incidents) > 1 \
+                       and right_incidents[-1] < incident_count:
+                    continue_search = False
+                    break
+
+            y_coord += 0.1
+
+        if continue_search:
+            right_incidents.append((x_coord, incident_count))
+            x_coord += 0.1  # shift to the right
             y_coord = y_initial
 
-        y_coord += 0.1
+        if right_incidents[-1][1] == 0:
+            break
 
-    if abs(anchor - x_left) < abs(anchor - x_coord):
-        x_coord = x_left
+    print "left incidents: {}".format(left_incidents[-1])
+    print "right incidents: {}".format(right_incidents[-1])
+
+    # import pudb;pu.db
+
+    # need new/more robust comparison method
+    left_coord, lincidents = left_incidents[-1]
+    right_coord, rincidents = right_incidents[-1]
+    left_score = abs(anchor - left_coord)**2 + lincidents**2
+    right_score = abs(anchor - right_coord)**2 + rincidents**2
+
+    if left_score < right_score:
+        x_coord = left_coord
+    else:
+        x_coord = right_coord
 
     return x_coord
 
@@ -114,11 +170,11 @@ if __name__ == "__main__":
             x1 = offset[0] + charoffset_x
             y1 = offset[1] + charoffset_y
 
-            if idx > 22:
-                import pudb;pu.db
+            # if idx > 22:
+                # import pudb;pu.db
 
             max_val = max_value_search(img, x1, y1, rnd_black, bbx[0])
-            x1 = pixel_search(img, x1, x1, y1, bbx[1], max_val)
+            x1 = pixel_search(img, x1, y1, bbx[1], max_val)
     
             x2 = bbx[0] + x1
             y2 = bbx[1] + offset[1]
