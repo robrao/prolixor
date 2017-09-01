@@ -193,10 +193,10 @@ if __name__ == "__main__":
             x1, y1, x2, y2 = bbx
             draw.rectangle([x1, y1, x2, y2], outline='red')
 
-            if idx > 21:
-                print "x1: {}, y1: {}, x2: {}, y2: {}".format(x1, y1, x2, y2)
-                img.show()
-                dl_pic = raw_input("Delete {}? [y/N]: ".format(font_path))
+            # if idx > 21:
+                # print "x1: {}, y1: {}, x2: {}, y2: {}".format(x1, y1, x2, y2)
+                # img.show()
+                # dl_pic = raw_input("Delete {}? [y/N]: ".format(font_path))
 
         # font_name = os.path.basename(font_path).split(".")[0]
         # title = "{}_{}".format(font_name, count)
