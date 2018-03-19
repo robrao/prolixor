@@ -155,4 +155,4 @@ if __name__ == "__main__":
         img = Image.fromarray(np.uint8(res))
 
         img.show()
-        # img.save("imgname_{}.jpg".format(idx), "JPEG", dpi=(600, 600))
+        #img.save("imgname_{}.jpg".format(idx), "JPEG", dpi=(600, 600))
