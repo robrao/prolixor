@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Create directory for fonts..."
 mkdir -p fonts && cd fonts
 
@@ -8,20 +10,20 @@ echo "Unzipping fonts"
 unzip master.zip -d .
 
 # If need to install on system
-#unameOut="$(uname -s)"
-#case "${unameOut}" in
-    #Linux*)     machine=Linux;;
-    #Darwin*)    machine=Mac;;
-    #CYGWIN*)    machine=Cygwin;;
-    #MINGW*)     machine=MinGw;;
-    #*)          machine="UNKNOWN:${unameOut}"
-#esac
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)     machine=Linux;;
+    Darwin*)    machine=Mac;;
+    CYGWIN*)    machine=Cygwin;;
+    MINGW*)     machine=MinGw;;
+    *)          machine="UNKNOWN:${unameOut}"
+esac
 
-#echo "Install fonts"
-#if [$unameOut == Linux"]; then
-    #cp *.ttf /usr/local/share/fonts
-#else
-    #cp *.ttf /Library/Fonts/
-#fi
+echo "Install fonts: ${unameOut}"
+if [ "$unameOut" == "Linux" ]; then
+    find fonts -type f -name "*.ttf" -exec mv -i {} ~/.fonts \;
+else
+    echo "Not Linux"
+fi
 
 echo "Done."
