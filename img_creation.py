@@ -46,15 +46,19 @@ def pixel_search(img, x_coord, y_coord, height, img_height, max_val):
 
 if __name__ == "__main__":
     fonts = []
-    for root, dirnames, filenames in os.walk('./fonts/fonts-master/'):
-        for filename in fnmatch.filter(filenames, '*.ttf'):
-            fonts.append(os.path.join(root, filename))
+    # for root, dirnames, filenames in os.walk('./fonts/fonts-master/'):
+        # for filename in fnmatch.filter(filenames, '*.ttf'):
+            # fonts.append(os.path.join(root, filename))
+    for ffile in os.listdir('/home/rrao/.fonts'):
+        if ".ttf" in ffile:
+            fonts.append(os.path.join('/home/rrao/.fonts', ffile))
 
     for idx in range(0, 10):
         # Randomize number of chars in image
         # Supercalifragilisticexpialidocious
         font_size = randint(30, 150)
-        max_chars = int(34 * (1/(font_size/10.0)))
+        # max_chars = int(34 * (1/(font_size/10.0)))
+        max_chars = 1  #XXX: Only need OCR ability, doesn't need to recongnize words..initially...
         num_chars = randint(1, max_chars)
         chars = deque(maxlen=num_chars)
 
@@ -80,6 +84,7 @@ if __name__ == "__main__":
         # so only need single word per image
         word = "".join(chars)
 
+        rand_int = randint(0, len(fonts))
         font_path = fonts[randint(0, len(fonts))]
         font = ImageFont.truetype(font_path, size=font_size)
 
