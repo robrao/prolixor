@@ -34,7 +34,7 @@ if __name__ == "__main__":
             fonts.append(os.path.join('/home/rrao/.fonts', ffile))
 
     fonts_ratings = []
-    for font_path in fonts:
+    for idx, font_path in enumerate(fonts):
         font_size = 100
         char_lower = []
         char_upper = []
@@ -77,7 +77,8 @@ if __name__ == "__main__":
         img.show(title="lower_case")
         img2.show(title="upper_case")
 
-        rating = raw_input('Rate this font, 0 is deleted [0 - 5]: ');
+        format_string = "({}/{}) Rate font [0 - 5]: ".format(idx, len(fonts))
+        rating = raw_input(format_string);
 
         fonts_ratings.append((font_path, rating))
 
