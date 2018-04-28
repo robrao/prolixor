@@ -50,18 +50,23 @@ if __name__ == "__main__":
         font = ImageFont.truetype(font_path, size=font_size)
 
         # Image size changes in relation to font size
-        im_w_f = font_size * 1
+        im_w_f = font_size * 1.5
         im_h_f = font_size + im_w_f
         im_w = int(im_w_f)
         im_h = int(im_h_f)
 
         # randomize background on image
-        img = Image.new('RGBA', (im_w, im_h), 'white')
-        draw = ImageDraw.Draw(img, "RGBA")
-        dw, dh = draw.textsize(c_lower, font)
-        img2 = Image.new('RGBA', (im_w, im_h), 'white')
-        draw2 = ImageDraw.Draw(img2, "RGBA")
-        dw, dh = draw2.textsize(c_upper, font)
+        try:
+            img = Image.new('RGBA', (im_w, im_h), 'white')
+            draw = ImageDraw.Draw(img, "RGBA")
+            dw, dh = draw.textsize(c_lower, font=font)
+            img2 = Image.new('RGBA', (im_w, im_h), 'white')
+            draw2 = ImageDraw.Draw(img2, "RGBA")
+            dw, dh = draw2.textsize(c_upper, font=font)
+        except IOError as e:
+            print "{} corrupt".format(font_path)
+            fonts_ratings.append((font_path, 0))
+            continue
 
         cent_w = (im_w - dw) / 2.0
         cent_h = (im_h - dh) / 2.0

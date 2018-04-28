@@ -89,7 +89,7 @@ if __name__ == "__main__":
         font = ImageFont.truetype(font_path, size=font_size)
 
         # Image size changes in relation to font size
-        im_w_f = font_size * num_chars
+        im_w_f = font_size * num_chars * 1.5
         im_h_f = font_size + im_w_f
         im_w = int(im_w_f)
         im_h = int(im_h_f)
@@ -97,7 +97,7 @@ if __name__ == "__main__":
         # randomize background on image
         img = Image.new('RGBA', (im_w, im_h), 'white')
         draw = ImageDraw.Draw(img, "RGBA")
-        dw, dh = draw.textsize(word, font)
+        dw, dh = draw.textsize(word, font=font)
 
         # per char size
         char_size = []
