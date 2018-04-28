@@ -3,6 +3,7 @@
 *.png
 
 # Files
+*.csv
 *.swp
 *.swo
 .DS_Store
