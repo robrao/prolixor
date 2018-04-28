@@ -1,5 +1,8 @@
 #!/usr/bin/python
+import io
 import os
+import csv
+import psutil
 import fnmatch
 
 from random import randint, choice
@@ -12,18 +15,12 @@ from random import uniform as rnd_uniform
 
 import numpy as np
 
-def remove_fonts(font_paths):
-    f = open("removed_fonts.txt", "w")
-
-    for fp in font_paths:
-        try:
-            os.remove(fp)
-            f.write(os.path.basename(fp))
-            print "removed {}".format(fp)
-        except OSError:
-            print "couldn't find font: {}".format(fp)
-
-    f.close()
+def write_ratings_to_file(font_paths):
+    with open("font_ratings.csv", "wb") as outcsv:
+        writer = csv.writer(outcsv, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+        writer.writerow(["font", "rating"])
+        for fpr in font_paths:
+            writer.writerow([fpr[0], fpr[1]])
 
 if __name__ == "__main__":
     fonts = []
@@ -36,7 +33,7 @@ if __name__ == "__main__":
         if ".ttf" in ffile:
             fonts.append(os.path.join('/home/rrao/.fonts', ffile))
 
-    removed_font_paths = []
+    fonts_ratings = []
     for font_path in fonts:
         font_size = 100
         char_lower = []
@@ -73,21 +70,19 @@ if __name__ == "__main__":
         txtx = cent_w + x_jitter
         txty = cent_h + y_jitter
 
-        draw.text((txtx, txty), c_lower, (0, 0, 0, 0), font=font)
-        draw2.text((txtx, txty), c_upper, (0, 0, 0, 0), font=font)
+        draw.text((txtx, txty), c_lower, fill="black", font=font)
+        draw2.text((txtx, txty), c_upper, fill="black", font=font)
 
         #TODO: display images so they are not overlapped
-        img.show()
-        img2.show()
+        img.show(title="lower_case")
+        img2.show(title="upper_case")
 
-        del_or_no = raw_input('Delete this font? [y/N]');
+        rating = raw_input('Rate this font, 0 is deleted [0 - 5]: ');
 
-        if del_or_no == 'y':
-            removed_fonts_paths.append(font_path)
-            print "{} as been queued for removal".format(os.path.basename(font_path))
+        fonts_ratings.append((font_path, rating))
 
-        #TODO: Images are not being closed
-        img.close()
-        img2.close()
+        for proc in psutil.process_iter():
+            if proc.name() == "display":
+                proc.kill()
 
-    #remove_fonts(removed_font_paths)
+    write_ratings_to_file(fonts_ratings)
