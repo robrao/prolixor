@@ -89,7 +89,7 @@ if __name__ == "__main__":
         font = ImageFont.truetype(font_path, size=font_size)
 
         # Image size changes in relation to font size
-        im_w_f = font_size * num_chars
+        im_w_f = font_size * num_chars * 2
         im_h_f = font_size + im_w_f
         im_w = int(im_w_f)
         im_h = int(im_h_f)
@@ -97,7 +97,7 @@ if __name__ == "__main__":
         # randomize background on image
         img = Image.new('RGBA', (im_w, im_h), 'white')
         draw = ImageDraw.Draw(img, "RGBA")
-        dw, dh = draw.textsize(word, font)
+        dw, dh = draw.textsize(word, font=font)
 
         # per char size
         char_size = []
@@ -109,12 +109,16 @@ if __name__ == "__main__":
             char_size.append(csize)
             char_offset.append(offset)
 
-        cent_w = (im_w - dw) / 2.0
-        cent_h = (im_h - dh) / 2.0
-        x_jitter = randint(0, int((im_w - dw) * 0.25)) * choice([-1, 1])
-        y_jitter = randint(0, int((im_h - dh) * 0.25)) * choice([-1, 1])
-        txtx = cent_w + x_jitter
-        txty = cent_h + y_jitter
+        try:
+            cent_w = (im_w - dw) / 2.0
+            cent_h = (im_h - dh) / 2.0
+            x_jitter = randint(0, int((im_w - dw) * 0.25)) * choice([-1, 1])
+            y_jitter = randint(0, int((im_h - dh) * 0.25)) * choice([-1, 1])
+            txtx = cent_w + x_jitter
+            txty = cent_h + y_jitter
+        except ValueError as e:
+            print "Error: test dw > img width -- ignoring..."
+            continue
 
         draw.text((txtx, txty), word, rnd_black, font=font)
 
