@@ -27,10 +27,10 @@ def cast_to_int(var):
     return res
 
 def csv_exists():
-    return os.path.isfile('./font_ratings.csv')
+    return os.path.isfile('./font_data.csv')
 
 def write_ratings_to_file(font_paths):
-    with open("font_ratings.csv", "wb") as outcsv:
+    with open("font_data.csv", "wb") as outcsv:
         writer = csv.writer(outcsv, delimiter=',', quoting=csv.QUOTE_MINIMAL)
         writer.writerow(["font", "rating"])
         for fpr in font_paths:
@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     fonts_ratings = []
     if csv_exists():
-        with open('font_ratings.csv', 'r') as csvfile:
+        with open('font_data.csv', 'r') as csvfile:
             creader = csv.reader(csvfile, delimiter=',')
             for row in creader:
                 if row[0] == 'font' and row[1] == 'rating':
