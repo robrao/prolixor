@@ -3,6 +3,7 @@
 *.png
 
 # Files
+*.txt
 *.csv
 *.swp
 *.swo

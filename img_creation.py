@@ -1,11 +1,13 @@
 #!/usr/bin/python
 import os
 import fnmatch
+import pandas as pd
 
 from random import randint, choice
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from collections import deque
 from string import ascii_lowercase as chars_lower
+from string import ascii_uppercase as chars_upper
 from skimage.util import random_noise
 from random import uniform as rnd_uniform
 
@@ -52,18 +54,16 @@ if __name__ == "__main__":
     for ffile in os.listdir('/home/rrao/.fonts'):
         if ".ttf" in ffile:
             fonts.append(os.path.join('/home/rrao/.fonts', ffile))
+    if (os.path.isfile('font_data.csv')):
+        print "FOUND DATA FILE"
+        font_data = pd.read_csv('font_data.csv', sep=',')
+        print font_data['fonts']
 
-    for idx in range(0, 10):
-        # Randomize number of chars in image
-        # Supercalifragilisticexpialidocious
+    # for idx in range(0, 10):
+    for idx in range(0, 1):
         font_size = randint(30, 150)
-        # max_chars = int(34 * (1/(font_size/10.0)))
-        max_chars = 1  #XXX: Only need OCR ability, doesn't need to recongnize words..initially...
-        num_chars = randint(1, max_chars)
-        chars = deque(maxlen=num_chars)
 
         # Randomize shade of black
-        # 90 arbitrary number
         rnd_shade = randint(0, 90)
         rnd_red = rnd_shade + randint(0, 2)
         rnd_blue = rnd_shade + randint(0, 2)
@@ -73,23 +73,18 @@ if __name__ == "__main__":
         rnd_black = (rnd_red, rnd_blue, rnd_green, rnd_alpha)
 
         # Randomize chars
-        chars_num = []
-        for i in range(0, num_chars):
-            rnd = randint(0, 25)
-            c = chars_lower[rnd]
-            chars.append(c)
-            chars_num.append(rnd)
+        # rnd = randint(0, 25)
+        rnd = 9
+        char = str(chars_lower[rnd])
 
-        # Initially user will highlight single word
-        # so only need single word per image
-        word = "".join(chars)
-
+        # Randomize fonts
         rand_int = randint(0, len(fonts))
         font_path = fonts[randint(0, len(fonts))]
+        # font_path = "/home/rrao/.fonts/Signika-Light.ttf"
         font = ImageFont.truetype(font_path, size=font_size)
 
         # Image size changes in relation to font size
-        im_w_f = font_size * num_chars * 2
+        im_w_f = font_size * 2
         im_h_f = font_size + im_w_f
         im_w = int(im_w_f)
         im_h = int(im_h_f)
@@ -97,71 +92,61 @@ if __name__ == "__main__":
         # randomize background on image
         img = Image.new('RGBA', (im_w, im_h), 'white')
         draw = ImageDraw.Draw(img, "RGBA")
-        dw, dh = draw.textsize(word, font=font)
+        bbx = draw.textsize(char, font=font)
 
         # per char size
-        char_size = []
-        char_offset = []
-        for c in chars:
-            w, h = draw.textsize(c, font)
-            csize = (w, h)
-            offset = font.getoffset(c)
-            char_size.append(csize)
-            char_offset.append(offset)
+        # w, h = draw.textsize(c, font)
+        # char_size = (w, h)
+        # char_offset = font.getoffset(c)
 
         try:
-            cent_w = (im_w - dw) / 2.0
-            cent_h = (im_h - dh) / 2.0
-            x_jitter = randint(0, int((im_w - dw) * 0.25)) * choice([-1, 1])
-            y_jitter = randint(0, int((im_h - dh) * 0.25)) * choice([-1, 1])
+            cent_w = (im_w - bbx[0]) / 2.0
+            cent_h = (im_h - bbx[1]) / 2.0
+            x_jitter = randint(0, int((im_w - bbx[0]) * 0.25)) * choice([-1, 1])
+            y_jitter = randint(0, int((im_h - bbx[1]) * 0.25)) * choice([-1, 1])
             txtx = cent_w + x_jitter
             txty = cent_h + y_jitter
         except ValueError as e:
-            print "Error: test dw > img width -- ignoring..."
+            print "Error: test bbx 0 > img width -- ignoring..."
             continue
 
-        draw.text((txtx, txty), word, rnd_black, font=font)
+        draw.text((txtx, txty), char, rnd_black, font=font)
 
         offset = [txtx, txty]
-        labels = []
-        for idx, bbx in enumerate(char_size):
-            charoffset_x, charoffset_y = char_offset[idx]
 
-            x1 = offset[0] + charoffset_x
-            y1 = offset[1] + charoffset_y
+        x1 = offset[0] #+ charoffset_x
+        y1 = offset[1] #+ charoffset_y
 
-            max_val = max_value_search(img, x1, y1, rnd_black, bbx[0])
-            x1 = pixel_search(img, x1, y1, bbx[1], im_h, max_val)
+        max_val = max_value_search(img, x1, y1, rnd_black, bbx[0])
+        x1 = pixel_search(img, x1, y1, bbx[1], im_h, max_val)
 
-            x2 = x1 + bbx[0]
-            y2 = offset[1] + bbx[1]
+        x2 = x1 + bbx[0]
+        y2 = offset[1] + bbx[1]
 
-            w = bbx[0]/im_w_f
-            h = bbx[1]/im_h_f
-            cx = (x1 + 0.5 * bbx[0])/im_w_f
-            cy = (y1 + 0.5 * bbx[1])/im_h_f
+        w = bbx[0]/im_w_f
+        h = bbx[1]/im_h_f
+        cx = (x1 + 0.5 * bbx[0])/im_w_f
+        cy = (y1 + 0.5 * bbx[1])/im_h_f
 
-            draw.rectangle([x1, y1, x2, y2], outline='red')
+        draw.rectangle([x1, y1, x2, y2], outline='red')
 
-            label = "{} {} {} {} {}".format(chars_num[idx], cx, cy, w, h)
-
-            labels.append(label)
-            offset[0] = x2
+        label = "font: {} char: {} - {} {} {} {}".format(font_path, rnd, cx, cy, w, h)
+        print label
 
         # Blur image
-        rnd_blur = rnd_uniform(0.0, 20.0) * im_h_f/1000
-        img = img.filter(ImageFilter.GaussianBlur(rnd_blur))
+        # rnd_blur = rnd_uniform(0.0, 20.0) * im_h_f/1000
+        # img = img.filter(ImageFilter.GaussianBlur(rnd_blur))
 
         # Noise Image
-        npim = np.asarray(img)
-        noise = random_noise(
-                npim,
-                'speckle',
-                mean=rnd_uniform(0, 2),
-                var=rnd_uniform(0.01, 0.1)
-        )
-        res = npim * noise
-        img = Image.fromarray(np.uint8(res))
+        # npim = np.asarray(img)
+        # noise = random_noise(
+                # npim,
+                # 'speckle',
+                # mean=rnd_uniform(0, 2),
+                # var=rnd_uniform(0.01, 0.1)
+        # )
+        # res = npim * noise
+        # img = Image.fromarray(np.uint8(res))
 
         img.show()
         # img.save("imgname_{}.jpg".format(idx), "JPEG", dpi=(600, 600))
