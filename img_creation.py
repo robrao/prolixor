@@ -47,17 +47,9 @@ def pixel_search(img, x_coord, y_coord, height, img_height, max_val):
     return x_coord
 
 if __name__ == "__main__":
-    fonts = []
-    # for root, dirnames, filenames in os.walk('./fonts/fonts-master/'):
-        # for filename in fnmatch.filter(filenames, '*.ttf'):
-            # fonts.append(os.path.join(root, filename))
-    for ffile in os.listdir('/home/rrao/.fonts'):
-        if ".ttf" in ffile:
-            fonts.append(os.path.join('/home/rrao/.fonts', ffile))
     if (os.path.isfile('font_data.csv')):
-        print "FOUND DATA FILE"
         font_data = pd.read_csv('font_data.csv', sep=',')
-        print font_data['fonts']
+        fonts = font_data[(font_data.rating != 0)].font
 
     # for idx in range(0, 10):
     for idx in range(0, 1):
