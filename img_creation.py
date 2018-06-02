@@ -95,6 +95,7 @@ if __name__ == "__main__":
         rnd = 9 # XXX: Testing
         char = str(chars_lower[rnd]) # XXX: Testing
 
+        # TODO: Shading not working...
         # TODO: search through all fonts to find chars
         # that intersect with bbxs only active when arg used
 
@@ -125,7 +126,6 @@ if __name__ == "__main__":
             print "Error: test bbx 0 > img width -- ignoring..."
             continue
 
-        # TODO: Shading not working...
         # draw.text((txtx, txty), char, rnd_black, font=font)
         draw.text((txtx, txty), char, 'black', font=font)
 
@@ -137,8 +137,6 @@ if __name__ == "__main__":
         x1 = pixel_search_x(img, x1, y1, bbx[1], im_h, max_val, 'left')
         y1 = pixel_search_y(img, x1, y1, bbx[0], bbx[1], im_w, im_h, max_val)
         x2 = pixel_search_x(img, x1 + bbx[0], y1, bbx[1], im_h, max_val, 'right')
-
-        # x2 = x1 + bbx[0]
 
         w = bbx[0]/im_w_f
         h = bbx[1]/im_h_f
