@@ -70,8 +70,9 @@ def pixel_search_y(img, x_coord, y_coord, width, height, img_width, img_height, 
     return y_coord
 
 # TODO: don't do extra checks if intersection found along one line
-def check_bbx_for_intersection(x1, y1, x2, y2, img, font_colour):
+def check_bbx_for_intersection(x1, y1, x2, y2, img, font_colour, label):
     intersection_found = False
+
     x_current = x1
     while x_current < x2: # check bottom horizontal line
         if img.getpixel((x_current, y1)) == font_colour:  # does not match background values
@@ -106,8 +107,7 @@ def check_bbx_for_intersection(x1, y1, x2, y2, img, font_colour):
 
     if intersection_found:
         img.show()
-    else:
-        print "No Intersection"
+        print "Intersection found - " + label
 
 def get_argparser():
     aparser = argparse.ArgumentParser(description="create OCR data...")
@@ -123,17 +123,14 @@ if __name__ == "__main__":
     if (os.path.isfile('font_data.csv')):
         font_data = pd.read_csv('font_data.csv', sep=',')
         fonts = font_data[(font_data.rating != 0)].font.tolist()
-        fonts = fonts[:1] # XXX: Testing
 
-    for font_path in fonts:
+    for fcount, font_path in enumerate(fonts):
         # Need all chars in each font, upper and lower.
-        # for idx in range(0, 50):
-        for idx in range(0, 1):
-            idx = 9
-            if idx > 25:
+        for idx in range(0, 52):
+            if idx < 25:
                 char = chars_lower[idx]
             else:
-                char = chars_upper[idx]
+                char = chars_upper[idx - 26]
             
             font_size = randint(30, 150)
 
@@ -146,7 +143,6 @@ if __name__ == "__main__":
 
             rnd_black = (rnd_red, rnd_blue, rnd_green, rnd_alpha)
 
-            # TODO: test bbx intersection on couple of fonts
             # TODO: run on all fonts
 
             font = ImageFont.truetype(font_path, size=font_size)
@@ -192,12 +188,14 @@ if __name__ == "__main__":
             draw.rectangle([x1, y1, x2, y2], outline='red')
 
             label = "font: {} char: {} - {} {} {} {} -- colour: {}".format(font_path, idx, cx, cy, w, h, rnd_black)
-            print label
 
             if (args.check_bbxs):
-                check_bbx_for_intersection(x1, y1, x2, y2, img, rnd_black)
+                check_bbx_for_intersection(x1, y1, x2, y2, img, rnd_black, label)
             else:
                 img.show()
+
+            if idx == 51:
+                print "completed ({}/{}): {}".format(fcount, len(fonts), font_path)
 
             # Blur image
             # rnd_blur = rnd_uniform(0.0, 20.0) * im_h_f/1000
