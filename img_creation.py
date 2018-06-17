@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import os
+import sys
 import fnmatch
 import argparse
 import pandas as pd
@@ -112,6 +113,7 @@ def check_bbx_for_intersection(x1, y1, x2, y2, img, font_colour, label):
 def get_argparser():
     aparser = argparse.ArgumentParser(description="create OCR data...")
     aparser.add_argument('-cb', '--check-bbxs', action='store_true', help="check bounding box perimeter for an intersection with character, display image if intersection exists.")
+    aparser.add_argument('-p', '--produce', action='store_true', help="produce output images for training.")
 
     return aparser
 
@@ -191,26 +193,27 @@ if __name__ == "__main__":
 
             if (args.check_bbxs):
                 check_bbx_for_intersection(x1, y1, x2, y2, img, rnd_black, label)
-            else:
+            elif (args.produce):
+                # Blur image
+                # rnd_blur = rnd_uniform(0.0, 5.0) * im_h_f/1000
+                # img = img.filter(ImageFilter.GaussianBlur(rnd_blur))
+
+                # Noise Image
+                npim = np.asarray(img)
+                noise = random_noise(
+                        npim,
+                        'speckle',
+                        mean=rnd_uniform(0, 2),
+                        var=rnd_uniform(0.01, 0.1)
+                )
+                res = npim * noise
+                img = Image.fromarray(np.uint8(res))
+
+                # img.save("imgname_{}.jpg".format(idx), "JPEG", dpi=(600, 600))
                 img.show()
+            else:
+                sys.exit("please provide an argument (-cb, or -p)");
 
             if idx == 51:
                 print "completed ({}/{}): {}".format(fcount, len(fonts), font_path)
 
-            # Blur image
-            # rnd_blur = rnd_uniform(0.0, 20.0) * im_h_f/1000
-            # img = img.filter(ImageFilter.GaussianBlur(rnd_blur))
-
-            # Noise Image
-            # npim = np.asarray(img)
-            # noise = random_noise(
-                    # npim,
-                    # 'speckle',
-                    # mean=rnd_uniform(0, 2),
-                    # var=rnd_uniform(0.01, 0.1)
-            # )
-            # res = npim * noise
-            # img = Image.fromarray(np.uint8(res))
-
-            # img.show()
-            # img.save("imgname_{}.jpg".format(idx), "JPEG", dpi=(600, 600))
