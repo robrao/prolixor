@@ -113,7 +113,8 @@ def check_bbx_for_intersection(x1, y1, x2, y2, img, font_colour, label):
 def get_argparser():
     aparser = argparse.ArgumentParser(description="create OCR data...")
     aparser.add_argument('-cb', '--check-bbxs', action='store_true', help="check bounding box perimeter for an intersection with character, display image if intersection exists.")
-    aparser.add_argument('-p', '--produce', action='store_true', help="produce output images for training.")
+    aparser.add_argument('-p', '--produce', help="produce output images for training to this path")
+    aparser.add_argument('-o', '--outline', action='store_true', help="outline characters with red box")
 
     return aparser
 
@@ -187,7 +188,8 @@ if __name__ == "__main__":
             cx = (x1 + 0.5 * bbx[0])/im_w_f
             cy = (y1 + 0.5 * bbx[1])/im_h_f
 
-            draw.rectangle([x1, y1, x2, y2], outline='red')
+            if (args.outline):
+                draw.rectangle([x1, y1, x2, y2], outline='red')
 
             label = "font: {} char: {} - {} {} {} {} -- colour: {}".format(font_path, idx, cx, cy, w, h, rnd_black)
 
@@ -195,8 +197,8 @@ if __name__ == "__main__":
                 check_bbx_for_intersection(x1, y1, x2, y2, img, rnd_black, label)
             elif (args.produce):
                 # Blur image
-                # rnd_blur = rnd_uniform(0.0, 5.0) * im_h_f/1000
-                # img = img.filter(ImageFilter.GaussianBlur(rnd_blur))
+                rnd_blur = rnd_uniform(0.0, 5.0) * im_h_f/1000
+                img = img.filter(ImageFilter.GaussianBlur(rnd_blur))
 
                 # Noise Image
                 npim = np.asarray(img)
@@ -208,9 +210,12 @@ if __name__ == "__main__":
                 )
                 res = npim * noise
                 img = Image.fromarray(np.uint8(res))
+                font_name = os.path.basename(font_path).split('.')[0]
+                img_name = "{}_{}.png".format(font_name, idx);
+                img_path = os.path.join(args.produce, img_name)
 
-                # img.save("imgname_{}.jpg".format(idx), "JPEG", dpi=(600, 600))
-                img.show()
+                img.save(img_path, "PNG", dpi=(600, 600))
+                # img.show()
             else:
                 sys.exit("please provide an argument (-cb, or -p)");
 
