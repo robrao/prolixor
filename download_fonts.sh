@@ -21,7 +21,7 @@ esac
 
 echo "Install fonts: ${unameOut}"
 if [ "$unameOut" == "Linux" ]; then
-    find fonts -type f -name "*.ttf" -exec mv -i {} ~/.fonts \;
+    find fonts-master -type f -name "*.ttf" -exec mv -i {} ~/.fonts \;
 else
     echo "Not Linux"
 fi
