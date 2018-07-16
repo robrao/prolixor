@@ -8,6 +8,8 @@
 *.swp
 *.swo
 .DS_Store
+.retry
+inventory
 
 # Dirs
 ven*/
