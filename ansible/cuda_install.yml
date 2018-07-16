@@ -7,7 +7,7 @@
   tasks:
     - name: Check drive is mounted correctly
       stat:
-        path: /mnt/data/cuda_9.2.88_396.26_linuxi
+        path: /mnt/data/cuda_9.2.88_396.26_linux
       register: stat_result
   
     - fail:
