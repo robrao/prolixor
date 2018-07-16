@@ -14,6 +14,12 @@
         msg: "Volume is not mounted with necessary files for CUDA"
       when: stat_result.stat.exists == False
 
+    - name: Install language package
+      become: yes
+      apt:
+        name: language-pack-en
+        update_cache: yes
+
     - name: Stop lighdm service
       become: yes
       service:
@@ -25,4 +31,18 @@
       file:
         state: absent
         path: /tmp/.X1-lock
+
+    - name: Install CUDA 9.2
+      become: yes
+      command: /mnt/data/cuda_9.2.88_396.26_linux --silent --driver --uninstall --toolkit --samples
+
+    - name: Install NVIDIA 396 Driver
+      become: yes
+      apt:
+        name: nvidia-396
+        update_cache: yes
+
+    - name: Install CUDNN 7
+      become: yes
+      command: dpkg -i /mnt/data/libcudnn7_7.1.4.18-1+cuda9.2_amd64.deb
         
