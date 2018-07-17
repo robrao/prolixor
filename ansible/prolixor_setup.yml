@@ -1,0 +1,21 @@
+---
+- name: Prolixor Setup
+  hosts: cybera
+  become_method: sudo
+  become_user: root
+
+  tasks:
+    - name: Install pip2
+      become: yes
+      apt:
+        name: python-pip
+        update_cache: yes
+
+    - name: Install virtualenv
+      pip:
+        name: virtualenv
+
+    # pull prolixor
+    # create virtualenv dir
+    # activate source
+    # install requirements.txt

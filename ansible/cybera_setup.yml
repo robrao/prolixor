@@ -1,0 +1,3 @@
+---
+- import_playbook: cuda_install.yml
+- import_playbook: prolixor_setup.yml
