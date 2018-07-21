@@ -1,5 +1,5 @@
 ---
-- name: Install CUDA 9.2
+- name: Install CUDA 9.0
   hosts: cybera
   become_method: sudo
   become_user: root
@@ -7,7 +7,7 @@
   tasks:
     - name: Check drive is mounted correctly
       stat:
-        path: /mnt/data/cuda_9.2.88_396.26_linux
+        path: /mnt/data/cuda_9.0.176_384.81_linux.run
       register: stat_result
   
     - fail:
@@ -32,17 +32,17 @@
         state: absent
         path: /tmp/.X1-lock
 
-    - name: Install CUDA 9.2
+    - name: Install CUDA 9.0
       become: yes
-      command: /mnt/data/cuda_9.2.88_396.26_linux --silent --driver --uninstall --toolkit --samples
+      command: /mnt/data/cuda_9.0.176_384.81_linux.run --silent --driver --uninstall --toolkit --samples
 
-    - name: Install NVIDIA 396 Driver
+    - name: Install NVIDIA 384 Driver
       become: yes
       apt:
-        name: nvidia-396
+        name: nvidia-384
         update_cache: yes
 
     - name: Install CUDNN 7
       become: yes
-      command: dpkg -i /mnt/data/libcudnn7_7.1.4.18-1+cuda9.2_amd64.deb
+      command: dpkg -i /mnt/data/libcudnn7_7.1.4.18-1+cuda9.0_amd64.deb
         

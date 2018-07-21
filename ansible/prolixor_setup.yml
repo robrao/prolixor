@@ -12,10 +12,17 @@
         update_cache: yes
 
     - name: Install virtualenv
+      become: yes
       pip:
         name: virtualenv
 
-    # pull prolixor
-    # create virtualenv dir
-    # activate source
-    # install requirements.txt
+    - git:
+        repo: 'https://github.com/robrao/prolixor.git'
+        dest: /home/ubuntu/prolixor
+        clone: yes
+        update: yes
+
+    - name: pip install requirements
+      pip:
+        requirements: /home/ubuntu/prolixor/requirements.txt
+        virtualenv: /home/ubuntu/prolixor/venv
