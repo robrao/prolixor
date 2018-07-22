@@ -66,9 +66,11 @@
 
     # Install globally? would need tensorflow-gpu to be global as well
     # remove tensorflow-gpu from prolixor.
+    # This is not working for some reason...
     - name: Python setup.py build
       shell: "/home/ubuntu/prolixor/venv/bin/python /home/ubuntu/tf_models/research/setup.py build"
 
+    # This is not working for some reason...
     - name: Python setup.py install
       shell: "/home/ubuntu/prolixor/venv/bin/python /home/ubuntu/tf_models/research/setup.py install"
 
