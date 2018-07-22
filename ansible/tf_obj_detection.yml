@@ -64,6 +64,8 @@
         state: present
         line: 'PYTHONPATH="$HOME/tf_models/research:$HOME/tf_models/research/slim"'
 
+    # Install globally? would need tensorflow-gpu to be global as well
+    # remove tensorflow-gpu from prolixor.
     - name: Python setup.py build
       shell: "/home/ubuntu/prolixor/venv/bin/python /home/ubuntu/tf_models/research/setup.py build"
 
