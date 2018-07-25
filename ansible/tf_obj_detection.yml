@@ -64,15 +64,13 @@
         state: present
         line: 'PYTHONPATH="$HOME/tf_models/research:$HOME/tf_models/research/slim"'
 
-    # Install globally? would need tensorflow-gpu to be global as well
-    # remove tensorflow-gpu from prolixor.
-    # This is not working for some reason...
-    - name: Python setup.py build
-      shell: "/home/ubuntu/prolixor/venv/bin/python /home/ubuntu/tf_models/research/setup.py build"
+    #- name: Python setup.py build
+      #shell: "/home/ubuntu/prolixor/venv/bin/python /home/ubuntu/tf_models/research/setup.py build"
 
-    # This is not working for some reason...
-    - name: Python setup.py install
-      shell: "/home/ubuntu/prolixor/venv/bin/python /home/ubuntu/tf_models/research/setup.py install"
+    #- name: Python setup.py install
+      #shell: "/home/ubuntu/prolixor/venv/bin/python /home/ubuntu/tf_models/research/setup.py install"
+    - name: TF object-detection install pip requirements
+      command: chdir=/home/ubuntu/tf_models/research /home/ubuntu/prolixor/venv/bin/pip install .
 
     - name: TF slim install pip requirements
       command: chdir=/home/ubuntu/tf_models/research/slim /home/ubuntu/prolixor/venv/bin/pip install .
