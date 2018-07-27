@@ -1,0 +1,71 @@
+---
+- name: Tensorflow Object Detection API
+  hosts: cybera
+  become_method: sudo
+  become_user: root
+
+  tasks:
+    - name: Install pip2
+      become: yes
+      apt:
+        name: python-pip
+        update_cache: yes
+
+    - name: Check protobuf-3 exists in mounted volume
+      stat:
+        path: /mnt/data/protoc-3.2.0-linux-x86_64.zip
+      register: stat_result
+  
+    - fail:
+        msg: "Protobuf 3 zip file missing"
+      when: stat_result.stat.exists == False
+
+    - name: Move protobuf 3 files
+      become: yes
+      shell: cp -r /mnt/data/protoc3/bin/* /usr/local/bin
+
+    - name: Move protobuf 3 include files
+      become: yes
+      shell: cp -r /mnt/data/protoc3/include/* /usr/local/include
+
+    - name: pip install TF object detection requirements
+      become: yes
+      pip:
+        name: Cython, contextlib2, pillow, lxml, matplotlib 
+
+    - name: Clone Tensorflow/models
+      git:
+        repo: 'https://github.com/tensorflow/models.git'
+        dest: /home/ubuntu/tf_models
+        clone: yes
+        update: yes
+
+    - name: Clone cocoapi
+      git:
+        repo: 'https://github.com/cocodataset/cocoapi.git'
+        dest: /home/ubuntu/cocoapi
+        clone: yes
+        update: yes
+
+    - name: Build Coco api
+      make:
+        chdir: /home/ubuntu/cocoapi/PythonAPI
+
+    - name: Copy pycocotools to tf_models/research
+      command: chdir=/home/ubuntu/cocoapi/PythonAPI cp -r pycocotools /home/ubuntu/tf_models/research
+
+    - name: Protobuf Compilation
+      become: yes
+      shell: chdir=/home/ubuntu/tf_models/research protoc object_detection/protos/*.proto --python_out=.
+
+    - name: update profile
+      lineinfile:
+        dest: /home/ubuntu/prolixor/venv/bin/activate
+        state: present
+        line: 'PYTHONPATH="$HOME/tf_models/research:$HOME/tf_models/research/slim"'
+
+    - name: TF object-detection install pip requirements
+      command: chdir=/home/ubuntu/tf_models/research /home/ubuntu/prolixor/venv/bin/pip install .
+
+    - name: TF slim install pip requirements
+      command: chdir=/home/ubuntu/tf_models/research/slim /home/ubuntu/prolixor/venv/bin/pip install .

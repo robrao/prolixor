@@ -1,0 +1,48 @@
+---
+- name: Install CUDA 9.0
+  hosts: cybera
+  become_method: sudo
+  become_user: root
+
+  tasks:
+    - name: Check drive is mounted correctly
+      stat:
+        path: /mnt/data/cuda_9.0.176_384.81_linux.run
+      register: stat_result
+  
+    - fail:
+        msg: "Volume is not mounted with necessary files for CUDA"
+      when: stat_result.stat.exists == False
+
+    - name: Install language package
+      become: yes
+      apt:
+        name: language-pack-en
+        update_cache: yes
+
+    - name: Stop lighdm service
+      become: yes
+      service:
+        name: lightdm
+        state: stopped
+
+    - name: Remove X1-lock file
+      become: yes
+      file:
+        state: absent
+        path: /tmp/.X1-lock
+
+    - name: Install CUDA 9.0
+      become: yes
+      command: /mnt/data/cuda_9.0.176_384.81_linux.run --silent --driver --uninstall --toolkit --samples
+
+    - name: Install NVIDIA 384 Driver
+      become: yes
+      apt:
+        name: nvidia-384
+        update_cache: yes
+
+    - name: Install CUDNN 7
+      become: yes
+      command: dpkg -i /mnt/data/libcudnn7_7.1.4.18-1+cuda9.0_amd64.deb
+        

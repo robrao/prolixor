@@ -1,0 +1,28 @@
+---
+- name: Prolixor Setup
+  hosts: cybera
+  become_method: sudo
+  become_user: root
+
+  tasks:
+    - name: Install pip2
+      become: yes
+      apt:
+        name: python-pip
+        update_cache: yes
+
+    - name: Install virtualenv
+      become: yes
+      pip:
+        name: virtualenv
+
+    - git:
+        repo: 'https://github.com/robrao/prolixor.git'
+        dest: /home/ubuntu/prolixor
+        clone: yes
+        update: yes
+
+    - name: pip install requirements
+      pip:
+        requirements: /home/ubuntu/prolixor/requirements.txt
+        virtualenv: /home/ubuntu/prolixor/venv
