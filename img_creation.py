@@ -142,12 +142,8 @@ if __name__ == "__main__":
             rnd_red = rnd_shade + randint(0, 2)
             rnd_blue = rnd_shade + randint(0, 2)
             rnd_green = rnd_shade + randint(0, 2)
-            rnd_alpha = randint(240, 255)
 
-            rnd_black = (rnd_red, rnd_blue, rnd_green, rnd_alpha)
-
-            # TODO: run on all fonts
-
+            rnd_black = (rnd_red, rnd_blue, rnd_green)
             font = ImageFont.truetype(font_path, size=font_size)
 
             # Image size changes in relation to font size
@@ -157,8 +153,8 @@ if __name__ == "__main__":
             im_h = int(im_h_f)
 
             # randomize background on image
-            img = Image.new('RGBA', (im_w, im_h), 'white')
-            draw = ImageDraw.Draw(img, "RGBA")
+            img = Image.new('RGB', (im_w, im_h), 'white')
+            draw = ImageDraw.Draw(img, "RGB")
             bbx = draw.textsize(char, font=font)
 
             try:
@@ -211,10 +207,10 @@ if __name__ == "__main__":
                 res = npim * noise
                 img = Image.fromarray(np.uint8(res))
                 font_name = os.path.basename(font_path).split('.')[0]
-                img_name = "{}_{}.png".format(font_name, idx);
+                img_name = "{}_{}.jpg".format(font_name, idx);
                 img_path = os.path.join(args.produce, img_name)
 
-                img.save(img_path, "PNG", dpi=(600, 600))
+                img.save(img_path, "JPEG", dpi=(600, 600))
                 # img.show()
             else:
                 sys.exit("please provide an argument (-cb, or -p)");
