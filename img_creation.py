@@ -183,6 +183,11 @@ if __name__ == "__main__":
             y1 = pixel_search_y(img, x1, y1, bbx[0], bbx[1], im_w, im_h, max_val)
             x2 = pixel_search_x(img, x1 + bbx[0], y1, bbx[1], im_h, max_val, 'right')
 
+            norm_x1 = x1/im_w;
+            norm_x2 = x2/im_w;
+            norm_y1 = y1/im_h;
+            norm_y2 = y2/im_h;
+
             if (args.outline):
                 draw.rectangle([x1, y1, x2, y2], outline='red')
 
