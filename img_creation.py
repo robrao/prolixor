@@ -135,7 +135,7 @@ if __name__ == "__main__":
             else:
                 char = chars_upper[idx - 26]
             
-            font_size = randint(30, 150)
+            font_size = randint(30, 66)
 
             # Randomize shade of black
             rnd_shade = randint(0, 20)
@@ -147,10 +147,14 @@ if __name__ == "__main__":
             font = ImageFont.truetype(font_path, size=font_size)
 
             # Image size changes in relation to font size
-            im_w_f = font_size * 2
-            im_h_f = font_size + im_w_f
-            im_w = int(im_w_f)
-            im_h = int(im_h_f)
+            # im_w_f = font_size * 2
+            # im_h_f = font_size + im_w_f
+            # im_w = int(im_w_f)
+            # im_h = int(im_h_f)
+
+            # Fixed image size for MobileNet 224px res.
+            im_w = int(112)
+            im_h = int(112)
 
             # randomize background on image
             img = Image.new('RGB', (im_w, im_h), 'white')
@@ -179,21 +183,16 @@ if __name__ == "__main__":
             y1 = pixel_search_y(img, x1, y1, bbx[0], bbx[1], im_w, im_h, max_val)
             x2 = pixel_search_x(img, x1 + bbx[0], y1, bbx[1], im_h, max_val, 'right')
 
-            w = bbx[0]/im_w_f
-            h = bbx[1]/im_h_f
-            cx = (x1 + 0.5 * bbx[0])/im_w_f
-            cy = (y1 + 0.5 * bbx[1])/im_h_f
-
             if (args.outline):
                 draw.rectangle([x1, y1, x2, y2], outline='red')
 
-            label = "font: {} char: {} - {} {} {} {} -- colour: {}".format(font_path, idx, cx, cy, w, h, rnd_black)
+            label = "font: {} char: {} - {} {} {} {} -- colour: {}".format(font_path, idx, x1, y1, x2, y2, rnd_black)
 
             if (args.check_bbxs):
                 check_bbx_for_intersection(x1, y1, x2, y2, img, rnd_black, label)
             elif (args.produce):
                 # Blur image
-                rnd_blur = rnd_uniform(0.0, 5.0) * im_h_f/1000
+                rnd_blur = rnd_uniform(0.0, 5.0) * im_h/1000
                 img = img.filter(ImageFilter.GaussianBlur(rnd_blur))
 
                 # Noise Image
@@ -210,7 +209,7 @@ if __name__ == "__main__":
                 img_name = "{}_{}.jpg".format(font_name, idx);
                 img_path = os.path.join(args.produce, img_name)
 
-                img.save(img_path, "JPEG", dpi=(600, 600))
+                img.save(img_path, "JPEG")
                 # img.show()
             else:
                 sys.exit("please provide an argument (-cb, or -p)");
