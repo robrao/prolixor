@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import os
 import sys
+import csv
 import fnmatch
 import argparse
 import pandas as pd
@@ -122,6 +123,7 @@ def get_argparser():
 if __name__ == "__main__":
     parser = get_argparser();
     args = parser.parse_args();
+    csv_output = [['class', 'filename', 'height', 'width', 'xmax', 'xmin', 'ymax', 'ymin']]
 
     if (os.path.isfile('font_data.csv')):
         font_data = pd.read_csv('font_data.csv', sep=',')
@@ -132,8 +134,10 @@ if __name__ == "__main__":
         for idx in range(0, 52):
             if idx < 25:
                 char = chars_lower[idx]
+                char_output = char
             else:
                 char = chars_upper[idx - 26]
+                char_output = chars_lower[idx - 26]
             
             font_size = randint(30, 66)
 
@@ -192,6 +196,7 @@ if __name__ == "__main__":
                 draw.rectangle([x1, y1, x2, y2], outline='red')
 
             label = "font: {} char: {} - {} {} {} {} -- colour: {}".format(font_path, idx, x1, y1, x2, y2, rnd_black)
+            csv_output.append([char_output, os.path.basename(font_path), x1, x2, y1, y2]);
 
             if (args.check_bbxs):
                 check_bbx_for_intersection(x1, y1, x2, y2, img, rnd_black, label)
@@ -221,4 +226,9 @@ if __name__ == "__main__":
 
             if idx == 51:
                 print "completed ({}/{}): {}".format(fcount, len(fonts), font_path)
+
+    with open('data.csv', 'wb') as csvfile:
+        cwriter = csv.writer(csvfile, delimiter=',')
+        for output in csv_output:
+            cwriter.writerow(output)
 
