@@ -123,7 +123,6 @@ def get_argparser():
 if __name__ == "__main__":
     parser = get_argparser();
     args = parser.parse_args();
-    images_dir = os.path.join(args.produce, 'images');
     csv_train = [['class', 'filename', 'height', 'width', 'xmax', 'xmin', 'ymax', 'ymin']]
     csv_test = [['class', 'filename', 'height', 'width', 'xmax', 'xmin', 'ymax', 'ymin']]
 
@@ -131,8 +130,10 @@ if __name__ == "__main__":
         font_data = pd.read_csv('font_data.csv', sep=',')
         fonts = font_data[(font_data.rating != 0)].font.tolist()
 
-    if not (os.path.exists(images_dir)):
-        os.makedirs(images_dir)
+    if (args.produce):
+        images_dir = os.path.join(args.produce, 'images');
+        if not (os.path.exists(images_dir)):
+            os.makedirs(images_dir)
 
     for fcount, font_path in enumerate(fonts[:2]):
         # Need all chars in each font, upper and lower.
