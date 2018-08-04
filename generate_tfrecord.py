@@ -32,55 +32,55 @@ FLAGS = flags.FLAGS
 def class_text_to_int(row_label):
     if row_label == 'a':
         return 1
-    elif row_labal == 'b':
+    elif row_label == 'b':
         return 2
-    elif row_labal == 'c':
+    elif row_label == 'c':
         return 3
-    elif row_labal == 'd':
+    elif row_label == 'd':
         return 4
-    elif row_labal == 'e':
+    elif row_label == 'e':
         return 5
-    elif row_labal == 'f':
+    elif row_label == 'f':
         return 6
-    elif row_labal == 'g':
+    elif row_label == 'g':
         return 7
-    elif row_labal == 'h':
+    elif row_label == 'h':
         return 8
-    elif row_labal == 'i':
+    elif row_label == 'i':
         return 9
-    elif row_labal == 'j':
+    elif row_label == 'j':
         return 10
-    elif row_labal == 'k':
+    elif row_label == 'k':
         return 11
-    elif row_labal == 'l':
+    elif row_label == 'l':
         return 12
-    elif row_labal == 'm':
+    elif row_label == 'm':
         return 13
-    elif row_labal == 'n':
+    elif row_label == 'n':
         return 14
-    elif row_labal == 'o':
+    elif row_label == 'o':
         return 15
-    elif row_labal == 'p':
+    elif row_label == 'p':
         return 16
-    elif row_labal == 'q':
+    elif row_label == 'q':
         return 17
-    elif row_labal == 'r':
+    elif row_label == 'r':
         return 18
-    elif row_labal == 's':
+    elif row_label == 's':
         return 19
-    elif row_labal == 't':
+    elif row_label == 't':
         return 20
-    elif row_labal == 'u':
+    elif row_label == 'u':
         return 21
-    elif row_labal == 'v':
+    elif row_label == 'v':
         return 22
-    elif row_labal == 'w':
+    elif row_label == 'w':
         return 23
-    elif row_labal == 'x':
+    elif row_label == 'x':
         return 24
-    elif row_labal == 'y':
+    elif row_label == 'y':
         return 25
-    elif row_labal == 'z':
+    elif row_label == 'z':
         return 26
     else:
         None
