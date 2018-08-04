@@ -196,7 +196,7 @@ if __name__ == "__main__":
                 draw.rectangle([x1, y1, x2, y2], outline='red')
 
             label = "font: {} char: {} - {} {} {} {} -- colour: {}".format(font_path, idx, x1, y1, x2, y2, rnd_black)
-            csv_output.append([char_output, os.path.basename(font_path), x1, x2, y1, y2]);
+            csv_output.append([char_output, os.path.basename(font_path), im_h, im_w, x1, x2, y1, y2]);
 
             if (args.check_bbxs):
                 check_bbx_for_intersection(x1, y1, x2, y2, img, rnd_black, label)
