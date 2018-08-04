@@ -123,12 +123,16 @@ def get_argparser():
 if __name__ == "__main__":
     parser = get_argparser();
     args = parser.parse_args();
+    images_dir = os.path.join(args.produce, 'images');
     csv_train = [['class', 'filename', 'height', 'width', 'xmax', 'xmin', 'ymax', 'ymin']]
     csv_test = [['class', 'filename', 'height', 'width', 'xmax', 'xmin', 'ymax', 'ymin']]
 
     if (os.path.isfile('font_data.csv')):
         font_data = pd.read_csv('font_data.csv', sep=',')
         fonts = font_data[(font_data.rating != 0)].font.tolist()
+
+    if not (os.path.exists(images_dir)):
+        os.makedirs(images_dir)
 
     for fcount, font_path in enumerate(fonts[:2]):
         # Need all chars in each font, upper and lower.
@@ -223,7 +227,7 @@ if __name__ == "__main__":
                 img = Image.fromarray(np.uint8(res))
                 font_name = os.path.basename(font_path).split('.')[0]
                 img_name = "{}_{}.jpg".format(font_name, idx);
-                img_path = os.path.join(args.produce, img_name)
+                img_path = os.path.join(args.produce, 'images', img_name)
 
                 img.save(img_path, "JPEG")
                 # img.show()
@@ -233,12 +237,14 @@ if __name__ == "__main__":
             if idx == 51:
                 print "completed ({}/{}): {}".format(fcount, len(fonts), font_path)
 
-    with open('train_data.csv', 'wb') as csvfile:
+    train_data_path = os.path.join(args.produce, 'train_data.csv');
+    test_data_path = os.path.join(args.produce, 'test_data.csv');
+    with open(train_data_path, 'wb') as csvfile:
         cwriter = csv.writer(csvfile, delimiter=',')
         for output in csv_train:
             cwriter.writerow(output)
 
-    with open('test_data.csv', 'wb') as csvfile:
+    with open(test_data_path, 'wb') as csvfile:
         cwriter = csv.writer(csvfile, delimiter=',')
         for output in csv_test:
             cwriter.writerow(output)
