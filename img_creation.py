@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import os
 import sys
+import csv
 import fnmatch
 import argparse
 import pandas as pd
@@ -122,18 +123,26 @@ def get_argparser():
 if __name__ == "__main__":
     parser = get_argparser();
     args = parser.parse_args();
+    images_dir = os.path.join(args.produce, 'images');
+    csv_train = [['class', 'filename', 'height', 'width', 'xmax', 'xmin', 'ymax', 'ymin']]
+    csv_test = [['class', 'filename', 'height', 'width', 'xmax', 'xmin', 'ymax', 'ymin']]
 
     if (os.path.isfile('font_data.csv')):
         font_data = pd.read_csv('font_data.csv', sep=',')
         fonts = font_data[(font_data.rating != 0)].font.tolist()
 
-    for fcount, font_path in enumerate(fonts):
+    if not (os.path.exists(images_dir)):
+        os.makedirs(images_dir)
+
+    for fcount, font_path in enumerate(fonts[:2]):
         # Need all chars in each font, upper and lower.
         for idx in range(0, 52):
             if idx < 25:
                 char = chars_lower[idx]
+                char_output = char
             else:
                 char = chars_upper[idx - 26]
+                char_output = chars_lower[idx - 26]
             
             font_size = randint(30, 66)
 
@@ -193,6 +202,12 @@ if __name__ == "__main__":
 
             label = "font: {} char: {} - {} {} {} {} -- colour: {}".format(font_path, idx, x1, y1, x2, y2, rnd_black)
 
+            # Random training testing split (80/20)
+            if (randint(0, 4) == 0):
+                csv_test.append([char_output, os.path.basename(font_path), im_h, im_w, x1, x2, y1, y2]);
+            else:
+                csv_train.append([char_output, os.path.basename(font_path), im_h, im_w, x1, x2, y1, y2]);
+
             if (args.check_bbxs):
                 check_bbx_for_intersection(x1, y1, x2, y2, img, rnd_black, label)
             elif (args.produce):
@@ -212,7 +227,7 @@ if __name__ == "__main__":
                 img = Image.fromarray(np.uint8(res))
                 font_name = os.path.basename(font_path).split('.')[0]
                 img_name = "{}_{}.jpg".format(font_name, idx);
-                img_path = os.path.join(args.produce, img_name)
+                img_path = os.path.join(args.produce, 'images', img_name)
 
                 img.save(img_path, "JPEG")
                 # img.show()
@@ -221,4 +236,16 @@ if __name__ == "__main__":
 
             if idx == 51:
                 print "completed ({}/{}): {}".format(fcount, len(fonts), font_path)
+
+    train_data_path = os.path.join(args.produce, 'train_data.csv');
+    test_data_path = os.path.join(args.produce, 'test_data.csv');
+    with open(train_data_path, 'wb') as csvfile:
+        cwriter = csv.writer(csvfile, delimiter=',')
+        for output in csv_train:
+            cwriter.writerow(output)
+
+    with open(test_data_path, 'wb') as csvfile:
+        cwriter = csv.writer(csvfile, delimiter=',')
+        for output in csv_test:
+            cwriter.writerow(output)
 
