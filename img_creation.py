@@ -135,7 +135,7 @@ if __name__ == "__main__":
         if not (os.path.exists(images_dir)):
             os.makedirs(images_dir)
 
-    for fcount, font_path in enumerate(fonts[:2]):
+    for fcount, font_path in enumerate(fonts):
         # Need all chars in each font, upper and lower.
         for idx in range(0, 52):
             if idx < 25:
@@ -171,16 +171,17 @@ if __name__ == "__main__":
             draw = ImageDraw.Draw(img, "RGB")
             bbx = draw.textsize(char, font=font)
 
-            try:
-                cent_w = (im_w - bbx[0]) / 2.0
-                cent_h = (im_h - bbx[1]) / 2.0
-                x_jitter = randint(0, int(cent_w * 0.25)) * choice([-1, 1])
-                y_jitter = randint(0, int(cent_h * 0.25)) * choice([-1, 1])
-                txtx = cent_w + x_jitter
-                txty = cent_h + y_jitter
-            except ValueError as e:
-                print "Error: test bbx 0 > img width -- ignoring..."
+            cent_w = (im_w - bbx[0]) / 2.0
+            cent_h = (im_h - bbx[1]) / 2.0
+
+            if (cent_w < 0) or (cent_h < 0):
+                print "Text bbx larger than image...skipping {} {}".format(font_path, idx)
                 continue
+
+            x_jitter = randint(0, int(cent_w * 0.25)) * choice([-1, 1])
+            y_jitter = randint(0, int(cent_h * 0.25)) * choice([-1, 1])
+            txtx = cent_w + x_jitter
+            txty = cent_h + y_jitter
 
             draw.text((txtx, txty), char, fill=rnd_black, font=font)
 
