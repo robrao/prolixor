@@ -174,8 +174,8 @@ if __name__ == "__main__":
             try:
                 cent_w = (im_w - bbx[0]) / 2.0
                 cent_h = (im_h - bbx[1]) / 2.0
-                x_jitter = randint(0, int((im_w - bbx[0]) * 0.25)) * choice([-1, 1])
-                y_jitter = randint(0, int((im_h - bbx[1]) * 0.25)) * choice([-1, 1])
+                x_jitter = randint(0, int(cent_w * 0.25)) * choice([-1, 1])
+                y_jitter = randint(0, int(cent_h * 0.25)) * choice([-1, 1])
                 txtx = cent_w + x_jitter
                 txty = cent_h + y_jitter
             except ValueError as e:
