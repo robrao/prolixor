@@ -135,7 +135,7 @@ if __name__ == "__main__":
         if not (os.path.exists(images_dir)):
             os.makedirs(images_dir)
 
-    for fcount, font_path in enumerate(fonts):
+    for fcount, font_path in enumerate(fonts[:2]):
         # Need all chars in each font, upper and lower.
         for idx in range(0, 52):
             if idx < 25:
