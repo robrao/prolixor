@@ -114,6 +114,7 @@ def check_bbx_for_intersection(x1, y1, x2, y2, img, font_colour, label):
 def get_argparser():
     aparser = argparse.ArgumentParser(description="create OCR data...")
     aparser.add_argument('-cb', '--check-bbxs', action='store_true', help="check bounding box perimeter for an intersection with character, display image if intersection exists.")
+    aparser.add_argument('-cm', '--check-missing', action='store_true', help="check which fonts are missing from fonts directory")
     aparser.add_argument('-p', '--produce', help="produce output images for training to this path")
     aparser.add_argument('-o', '--outline', action='store_true', help="outline characters with red box")
 
@@ -130,13 +131,21 @@ if __name__ == "__main__":
         font_data = pd.read_csv('font_data.csv', sep=',')
         fonts = font_data[(font_data.rating != 0)].font.tolist()
 
+    if (args.check_missing):
+        for fp in fonts:
+            if not os.path.isfile(fp):
+                print "Missing font {}".format(fp)
+
     if (args.produce):
         images_dir = os.path.join(args.produce, 'images');
         if not (os.path.exists(images_dir)):
             os.makedirs(images_dir)
 
     for fcount, font_path in enumerate(fonts):
-        # Need all chars in each font, upper and lower.
+        if not (os.path.isfile(font_path)):
+            print "Missing font {} -- skipping".format(font_path)
+            continue
+
         for idx in range(0, 52):
             if idx < 25:
                 char = chars_lower[idx]
