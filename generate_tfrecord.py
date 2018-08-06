@@ -138,9 +138,9 @@ def main(_):
     path = os.path.join(FLAGS.image_input, 'images')
     examples = pd.read_csv(FLAGS.csv_input)
     grouped = split(examples, 'filename')
-	for group in grouped:
-		tf_example = create_tf_example(group, path)
-		writer.write(tf_example.SerializeToString())
+    for group in grouped:
+        tf_example = create_tf_example(group, path)
+        writer.write(tf_example.SerializeToString())
 
     writer.close()
     output_path = os.path.join(os.getcwd(), FLAGS.output_path)
