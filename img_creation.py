@@ -213,12 +213,6 @@ if __name__ == "__main__":
 
             label = "font: {} char: {} - {} {} {} {} -- colour: {}".format(font_path, idx, x1, y1, x2, y2, rnd_black)
 
-            # Random training testing split (80/20)
-            if (randint(0, 4) == 0):
-                csv_test.append([char_output, os.path.basename(font_path), im_h, im_w, x1, x2, y1, y2]);
-            else:
-                csv_train.append([char_output, os.path.basename(font_path), im_h, im_w, x1, x2, y1, y2]);
-
             if (args.check_bbxs):
                 check_bbx_for_intersection(x1, y1, x2, y2, img, rnd_black, label)
             elif (args.produce):
@@ -240,6 +234,12 @@ if __name__ == "__main__":
                 img_name = "{}_{}.jpg".format(font_name, idx);
                 img_path = os.path.join(args.produce, 'images', img_name)
 
+                # Random training testing split (80/20)
+                if (randint(0, 4) == 0):
+                    csv_test.append([char_output, img_name, im_h, im_w, x1, x2, y1, y2]);
+                else:
+                    csv_train.append([char_output, img_name, im_h, im_w, x1, x2, y1, y2]);
+
                 img.save(img_path, "JPEG")
                 # img.show()
             else:
@@ -248,15 +248,16 @@ if __name__ == "__main__":
             if idx == 51:
                 print "completed ({}/{}): {}".format(fcount, len(fonts), font_path)
 
-    train_data_path = os.path.join(args.produce, 'train_data.csv');
-    test_data_path = os.path.join(args.produce, 'test_data.csv');
-    with open(train_data_path, 'wb') as csvfile:
-        cwriter = csv.writer(csvfile, delimiter=',')
-        for output in csv_train:
-            cwriter.writerow(output)
+    if (args.produce):
+        train_data_path = os.path.join(args.produce, 'train_data.csv');
+        test_data_path = os.path.join(args.produce, 'test_data.csv');
+        with open(train_data_path, 'wb') as csvfile:
+            cwriter = csv.writer(csvfile, delimiter=',')
+            for output in csv_train:
+                cwriter.writerow(output)
 
-    with open(test_data_path, 'wb') as csvfile:
-        cwriter = csv.writer(csvfile, delimiter=',')
-        for output in csv_test:
-            cwriter.writerow(output)
+        with open(test_data_path, 'wb') as csvfile:
+            cwriter = csv.writer(csvfile, delimiter=',')
+            for output in csv_test:
+                cwriter.writerow(output)
 
