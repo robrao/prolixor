@@ -8,7 +8,7 @@
     - name: Install pip2
       become: yes
       apt:
-        name: python-pip
+        name: python-pip python-tk
         update_cache: yes
 
     - name: Check protobuf-3 exists in mounted volume
@@ -42,7 +42,7 @@
 
     - name: Clone cocoapi
       git:
-        repo: 'https://github.com/cocodataset/cocoapi.git'
+        repo: 'https://github.com/waleedka/coco'
         dest: /home/ubuntu/cocoapi
         clone: yes
         update: yes
@@ -51,8 +51,16 @@
       make:
         chdir: /home/ubuntu/cocoapi/PythonAPI
 
-    - name: Copy pycocotools to tf_models/research
-      command: chdir=/home/ubuntu/cocoapi/PythonAPI cp -r pycocotools /home/ubuntu/tf_models/research
+    - name: Make install Coco api
+      make:
+        chdir: /home/ubuntu/cocoapi/PythonAPI
+        target: install
+
+    - name: Python setup install COCO
+      command: chdir=/home/ubuntu/cocoapi/PythonAPI /home/ubuntu/prolixor/venv/bin/python setup.py install
+
+    #- name: Copy pycocotools to tf_models/research
+      #command: chdir=/home/ubuntu/cocoapi/PythonAPI cp -r pycocotools /home/ubuntu/tf_models/research
 
     - name: Protobuf Compilation
       become: yes
@@ -69,3 +77,33 @@
 
     - name: TF slim install pip requirements
       command: chdir=/home/ubuntu/tf_models/research/slim /home/ubuntu/prolixor/venv/bin/pip install .
+
+    - name: Create data directory
+      file: path=/home/ubuntu/tf_models/research/data state=directory
+
+    - name: Create train directory
+      file: path=/home/ubuntu/tf_models/research/train state=directory
+
+    - name: Create eval directory
+      file: path=/home/ubuntu/tf_models/research/eval state=directory
+
+    - name: Create models directory
+      file: path=/home/ubuntu/tf_models/research/models state=directory
+
+    - name: Create model directory
+      file: path=/home/ubuntu/tf_models/research/model state=directory
+
+    - name: Copy labels_map.pbtxt to tf_models/research/data
+      command: chdir=/home/ubuntu/prolixor cp label_map.pbtxt /home/ubuntu/tf_models/research/data
+
+    - name: Copy train.record to tf_models/research/data
+      command: chdir=/mnt/data cp train.record /home/ubuntu/tf_models/research/data
+
+    - name: Copy test.record to tf_models/research/data
+      command: chdir=/mnt/data cp test.record /home/ubuntu/tf_models/research/data
+
+    - name: Copy ssd_mobilenet_v2_coco to tf_models/research/models/model
+      command: chdir=/mnt/data cp -r ssd_mobilenet_v2_coco /home/ubuntu/tf_models/research/models/model
+
+    - name: Copy ssdlite_mobilenet_v2_coco.config to tf_models/research/models/model
+      command: chdir=/mnt/data cp ssdlite_mobilenet_v2_coco.config /home/ubuntu/tf_models/research/models/model
