@@ -8,7 +8,13 @@
     - name: Install pip2
       become: yes
       apt:
-        name: python-pip python-tk
+        name: python-pip
+        update_cache: yes
+
+    - name: Install python-tk
+      become: yes
+      apt:
+        name: python-tk
         update_cache: yes
 
     - name: Check protobuf-3 exists in mounted volume
@@ -52,6 +58,7 @@
         chdir: /home/ubuntu/cocoapi/PythonAPI
 
     - name: Make install Coco api
+      become: yes
       make:
         chdir: /home/ubuntu/cocoapi/PythonAPI
         target: install
