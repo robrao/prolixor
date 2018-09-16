@@ -98,7 +98,7 @@
       file: path=/home/ubuntu/tf_models/research/models state=directory
 
     - name: Create model directory
-      file: path=/home/ubuntu/tf_models/research/model state=directory
+      file: path=/home/ubuntu/tf_models/research/models/model state=directory
 
     - name: Copy labels_map.pbtxt to tf_models/research/data
       command: chdir=/home/ubuntu/prolixor cp label_map.pbtxt /home/ubuntu/tf_models/research/data
