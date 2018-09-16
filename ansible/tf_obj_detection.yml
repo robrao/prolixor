@@ -110,7 +110,7 @@
       command: chdir=/mnt/data cp test.record /home/ubuntu/tf_models/research/data
 
     - name: Copy ssd_mobilenet_v2_coco to tf_models/research/models/model
-      command: chdir=/mnt/data cp -avr ssd_mobilenet_v2_coco_2018_03_29 /home/ubuntu/tf_models/research/models/model
+      command: chdir=/mnt/data cp -avr ssd_mobilenet_v2_coco_2018_03_29/* /home/ubuntu/tf_models/research/models/model
 
     - name: Copy ssdlite_mobilenet_v2_coco.config to tf_models/research/models/model
-      command: chdir=/mnt/data cp ssdlite_mobilenet_v2_coco.config /home/ubuntu/tf_models/research/models/model
+      command: chdir=/home/ubuntu/prolixor cp ssdlite_mobilenet_v2_coco.config /home/ubuntu/tf_models/research/models/model
