@@ -1,0 +1,33 @@
+FROM tensorflow/tensorflow:latest-gpu
+WORKDIR /
+
+ADD . /models
+
+# Install GIT
+RUN apt-get update && apt-get install -y \
+    git \
+    wget
+
+# Install object_detection
+RUN cd /models/research && python setup.py build
+RUN cd /models/research && python setup.py install
+
+# COCO API installation
+RUN git clone https://github.com/cocodataset/cocoapi.git
+RUN make -C /cocoapi/PythonAPI
+RUN cp -r /cocoapi/PythonAPI/pycocotools /models/research/
+
+# Compile Protobuf
+RUN wget -O protobuf.zip https://github.com/google/protobuf/releases/download/v3.0.0/protoc-3.0.0-linux-x86_64.zip
+RUN unzip protobuf.zip
+RUN cd models/research && /bin/protoc object_detection/protos/*.proto --python_out=.
+
+# Environment Variables
+ENV PYTHONPATH="/models:/models/research:/models/research/slim"
+
+# Running container
+# docker build -t tf-models .
+# docker run -it --runtime=nvidia --rm tf-models:latest bash
+
+# Test installation
+# python object_detection/builders/model_builder_test.py
